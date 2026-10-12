@@ -1,8 +1,8 @@
 # DTCG 토큰 포맷 전환 — 설계
 
 - 날짜: 2026-07-01
-- 레포: `huray-figma-token-export` (플러그인)
-- 연관: `fe-toolkit` token-sync 스킬(변환·검증 정본), `huray-design-token`(허브)
+- 레포: `figma-token-export` (플러그인)
+- 연관: token-sync 스킬(변환·검증 정본), 토큰 저장소(허브)
 
 ## 아키텍처 결정 (확정: A안)
 
@@ -15,7 +15,7 @@
 - token-sync가 이미 "Style Dictionary 자리"(변환+검증+대화형 수정)를 수행 중.
 
 ```
-Figma → 플러그인 → tokens.json(DTCG) → 허브(huray-design-token)
+Figma → 플러그인 → tokens.json(DTCG) → 허브(토큰 저장소)
                                           ↓
    web:    "토큰 가져와줘" → token-sync 스킬 [fetch→변환→검증→수정→theme.css 반영→PR]
    mobile: 허브 tokens.json → 자체 파이프라인 → Android/iOS   (범위 밖)

@@ -1,17 +1,17 @@
-<svg width="1080" height="1080" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+<svg width="1920" height="1920" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6179ff"/>
-      <stop offset="1" stop-color="#00c1c6"/>
+      <stop offset="0" stop-color="#6d53f5"/><stop offset="1" stop-color="#06b6d4"/>
     </linearGradient>
   </defs>
-  <rect width="1080" height="1080" fill="url(#g)"/>
-  <text x="540" y="380" font-family="ui-monospace, Menlo, monospace" font-size="300"
-        font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">{ }</text>
-  <text x="540" y="660" font-family="-apple-system, Helvetica, sans-serif" font-size="92"
-        font-weight="800" fill="#ffffff" text-anchor="middle">Huray Token Export</text>
-  <text x="540" y="740" font-family="-apple-system, Helvetica, sans-serif" font-size="40"
-        font-weight="500" fill="#eaf0ff" text-anchor="middle">Figma variables, typography &amp; shadows → tokens.json</text>
-  <text x="540" y="800" font-family="-apple-system, Helvetica, sans-serif" font-size="40"
-        font-weight="500" fill="#eaf0ff" text-anchor="middle">→ GitHub Pull Request</text>
+  <rect width="1920" height="1920" fill="url(#g)"/>
+
+  <!-- 로고 마크 (좌측) — 세로중심 y=960 -->
+  <text x="335" y="960" font-family="ui-monospace,Menlo,monospace" font-size="340" font-weight="600" fill="#ffffff" text-anchor="middle" dominant-baseline="central">{</text>
+  <text x="555" y="960" font-family="ui-monospace,Menlo,monospace" font-size="340" font-weight="600" fill="#ffffff" text-anchor="middle" dominant-baseline="central">}</text>
+
+  <!-- 텍스트 블록 중심 y=960. 제목↔설명 넓게(110), 설명끼리 좁게(56) -->
+  <text x="730" y="890" font-family="-apple-system,'Apple SD Gothic Neo',Helvetica,sans-serif" font-size="92" font-weight="800" fill="#ffffff" dominant-baseline="central">Design Token Export</text>
+  <text x="734" y="1000" font-family="-apple-system,'Apple SD Gothic Neo',Helvetica,sans-serif" font-size="42" font-weight="500" fill="#eef2ff" dominant-baseline="central">Figma 변수와 스타일을 DTCG 규격 JSON으로 추출</text>
+  <text x="734" y="1056" font-family="-apple-system,'Apple SD Gothic Neo',Helvetica,sans-serif" font-size="42" font-weight="500" fill="#eef2ff" dominant-baseline="central">→ GitHub에 자동 업로드 (Pull Request)</text>
 </svg>

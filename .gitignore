@@ -1,3 +1,6 @@
 node_modules/
 dist/
 *.log
+
+# 실제 공용 토큰이 들어있어 커밋 금지 (커밋 시 GitHub이 토큰 자동 무효화)
+USAGE.md
