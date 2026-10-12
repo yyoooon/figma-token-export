@@ -9,6 +9,10 @@ function toValue(raw: unknown): SerializedValue {
   if (raw && typeof raw === 'object' && (raw as any).type === 'VARIABLE_ALIAS') {
     return { kind: 'ALIAS', id: (raw as any).id };
   }
+  if (raw && typeof raw === 'object' && 'color' in raw && 'opacity' in raw) {
+    const c = raw as { color: unknown; opacity: unknown };
+    return { kind: 'COMPOSED_COLOR', color: toValue(c.color), opacity: toValue(c.opacity) };
+  }
   if (raw && typeof raw === 'object' && 'r' in (raw as any)) {
     const c = raw as { r: number; g: number; b: number; a?: number };
     return { kind: 'COLOR', r: c.r, g: c.g, b: c.b, a: c.a ?? 1 };

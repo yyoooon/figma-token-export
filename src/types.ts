@@ -4,7 +4,9 @@ export type SerializedValue =
   | { kind: 'FLOAT'; value: number }
   | { kind: 'STRING'; value: string }
   | { kind: 'BOOLEAN'; value: boolean }
-  | { kind: 'ALIAS'; id: string }; // 대상 변수 id
+  | { kind: 'ALIAS'; id: string } // 대상 변수 id
+  // 묶음 색: 색·투명도 중 하나 이상이 별칭. opacity 는 퍼센트(30 = 30%).
+  | { kind: 'COMPOSED_COLOR'; color: SerializedValue; opacity: SerializedValue };
 
 export interface SerializedVariable {
   id: string;

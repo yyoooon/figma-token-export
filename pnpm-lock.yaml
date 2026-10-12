@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@figma/plugin-typings':
-        specifier: ^1.100.0
-        version: 1.130.0
+        specifier: ^1.141.0
+        version: 1.141.0
       '@types/node':
         specifier: ^26.1.0
         version: 26.1.0
@@ -164,8 +164,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@figma/plugin-typings@1.130.0':
-    resolution: {integrity: sha512-kz+eU4TXBr99YrMyF2/WtcsdS6K4Ksy3datZZtuCUUSDPRknJAVLZpjhBESCd0tCtHRWKeo4l/I7Aze6lHB52A==}
+  '@figma/plugin-typings@1.141.0':
+    resolution: {integrity: sha512-i+6AsBmiwGNpH4I6sgIvj5RX1dMWExzS7h33HGrU++//wPKotlIzJuGhG15woCQY1V1ctG/k5uW9HgfkTyTaWg==}
 
   '@jest/schemas@29.6.3':
     resolution: {integrity: sha512-mo5j5X+jIZmJQveBKeS/clAueipV7KgiX1vMgCxam1RNYiqE1w62n0/tJJnHtjW8ZHcQco5gY85jA3mi0L+nSA==}
@@ -695,7 +695,7 @@ snapshots:
   '@esbuild/win32-x64@0.21.5':
     optional: true
 
-  '@figma/plugin-typings@1.130.0': {}
+  '@figma/plugin-typings@1.141.0': {}
 
   '@jest/schemas@29.6.3':
     dependencies:

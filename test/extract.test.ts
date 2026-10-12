@@ -48,4 +48,31 @@ describe('extractFigma', () => {
     expect(out.variables[1].valuesByMode.m1).toEqual({ kind: 'ALIAS', id: 'v1' });
     expect(out.textStyles[0].boundVariables).toEqual({ fontSize: 'v1', fontFamily: 'v2' });
   });
+
+  it('묶음 색(변수 참조 + 투명도)을 COMPOSED_COLOR 로 직렬화한다 — "[object Object]" 금지', async () => {
+    (globalThis as any).figma = {
+      variables: {
+        getLocalVariableCollectionsAsync: vi.fn().mockResolvedValue([]),
+        getLocalVariablesAsync: vi.fn().mockResolvedValue([
+          {
+            id: 'v3',
+            name: 'Overlay/Normal',
+            variableCollectionId: 'c1',
+            resolvedType: 'COLOR',
+            valuesByMode: { m1: { color: { type: 'VARIABLE_ALIAS', id: 'v1' }, opacity: 30 } },
+            scopes: ['ALL_SCOPES'],
+            hiddenFromPublishing: false,
+          },
+        ]),
+      },
+      getLocalTextStylesAsync: vi.fn().mockResolvedValue([]),
+    };
+
+    const out = await extractFigma();
+    expect(out.variables[0].valuesByMode.m1).toEqual({
+      kind: 'COMPOSED_COLOR',
+      color: { kind: 'ALIAS', id: 'v1' },
+      opacity: { kind: 'FLOAT', value: 30 },
+    });
+  });
 });

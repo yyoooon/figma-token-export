@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@figma/plugin-typings": "^1.100.0",
+    "@figma/plugin-typings": "^1.141.0",
     "@types/node": "^26.1.0",
     "esbuild": "^0.21.0",
     "typescript": "^5.4.0",

@@ -1,4 +1,5 @@
 import type {
+  SerializedCollection,
   SerializedFigma,
   SerializedValue,
   SerializedVariable,
@@ -63,20 +64,54 @@ export function varsById(figma: SerializedFigma): Map<string, SerializedVariable
   return m;
 }
 
+function missingTargetError(v: SerializedVariable): Error {
+  return new Error(
+    `'${v.name}' 변수가 지금 없는 다른 변수를 가리키고 있어요. 연결된 변수가 삭제됐거나 다른 라이브러리에 있는지 확인해 주세요.`,
+  );
+}
+
+// 별칭을 끝까지 따라가 실제 값을 얻는다(묶음 색 풀이용).
+// 대상 컬렉션에 같은 모드가 없으면 그 컬렉션의 첫(기본) 모드 값을 쓴다.
+function resolveAlias(
+  v: SerializedVariable,
+  value: SerializedValue,
+  modeId: string,
+  vars: Map<string, SerializedVariable>,
+  collById: Map<string, SerializedCollection>,
+): SerializedValue {
+  let cur = value;
+  let mode = modeId;
+  while (cur.kind === 'ALIAS') {
+    const target = vars.get(cur.id);
+    if (!target) throw missingTargetError(v);
+    const modes = collById.get(target.collectionId)?.modes ?? [];
+    if (!modes.some((m) => m.modeId === mode)) mode = modes[0]?.modeId;
+    cur = target.valuesByMode[mode];
+    if (!cur) throw missingTargetError(v);
+  }
+  return cur;
+}
+
 function leafFor(
   v: SerializedVariable,
   value: SerializedValue,
   vars: Map<string, SerializedVariable>,
+  resolve: (value: SerializedValue) => SerializedValue,
 ): TokenLeaf {
   switch (value.kind) {
+    case 'COMPOSED_COLOR': {
+      // 실제 색 × 투명도(퍼센트) → #rrggbbaa. 예: 검정 · 30% → #0000004d
+      const color = resolve(value.color);
+      const opacity = resolve(value.opacity);
+      if (color.kind !== 'COLOR' || opacity.kind !== 'FLOAT')
+        throw new Error(`'${v.name}' 변수의 색 또는 투명도를 해석하지 못했어요.`);
+      return { $type: 'color', $value: rgbaToHex({ ...color, a: color.a * (opacity.value / 100) }) };
+    }
     case 'COLOR':
       return { $type: 'color', $value: rgbaToHex(value) };
     case 'ALIAS': {
       const target = vars.get(value.id);
-      if (!target)
-        throw new Error(
-          `'${v.name}' 변수가 지금 없는 다른 변수를 가리키고 있어요. 연결된 변수가 삭제됐거나 다른 라이브러리에 있는지 확인해 주세요.`,
-        );
+      if (!target) throw missingTargetError(v);
       return { $type: dtcgTypeOf(target), $value: varNameToRef(target.name) };
     }
     case 'FLOAT':
@@ -113,7 +148,8 @@ export function buildVariableSets(figma: SerializedFigma): Record<string, TokenT
       const value = v.valuesByMode[mode.modeId];
       if (value == null) continue;
       sets[setName] = sets[setName] ?? {};
-      setLeaf(sets[setName], figmaNameToPath(v.name), leafFor(v, value, vars));
+      const resolve = (x: SerializedValue) => resolveAlias(v, x, mode.modeId, vars, collById);
+      setLeaf(sets[setName], figmaNameToPath(v.name), leafFor(v, value, vars, resolve));
     }
   }
   return sets;

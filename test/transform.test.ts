@@ -179,6 +179,57 @@ describe('buildVariableSets — Effect 컬렉션이 그림자 세트를 만든�
   });
 });
 
+// 이슈 #1 — 변수 참조 + 투명도로 만든 색은 실제 색으로 풀어 #rrggbbaa 로 적는다.
+describe('buildVariableSets — 묶음 색(변수 참조 + 투명도)', () => {
+  const prim = { id: 'c1', name: 'Primitive', modes: [{ modeId: 'm1', name: 'Mode 1' }] };
+  const sem = { id: 'c2', name: 'Semantic', modes: [{ modeId: 'm2', name: 'Mode 1' }] };
+  const black = v({ id: 'black', name: 'Common/1000', collectionId: 'c1', resolvedType: 'COLOR', valuesByMode: { m1: { kind: 'COLOR', r: 0, g: 0, b: 0, a: 1 } } });
+  const op30 = v({ id: 'op30', name: 'Opacity/30', collectionId: 'c1', resolvedType: 'FLOAT', scopes: ['OPACITY'], valuesByMode: { m1: { kind: 'FLOAT', value: 30 } } });
+  const overlay = (value: any) =>
+    v({ id: 'ov', name: 'Overlay/Normal', collectionId: 'c2', resolvedType: 'COLOR', valuesByMode: { m2: value } });
+  const out = (value: any, extra: SerializedVariable[] = []) =>
+    (buildVariableSets(fig({ collections: [prim, sem], variables: [black, op30, ...extra, overlay(value)] }))['Semantic/Mode 1'] as any)
+      .Overlay.Normal;
+
+  it('색 별칭 + 숫자 투명도(퍼센트) → #0000004d', () => {
+    expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'black' }, opacity: { kind: 'FLOAT', value: 30 } }))
+      .toEqual({ $type: 'color', $value: '#0000004d' });
+  });
+
+  it('색 별칭 + 투명도 별칭 → 둘 다 따라가서 #0000004d', () => {
+    expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'black' }, opacity: { kind: 'ALIAS', id: 'op30' } }))
+      .toEqual({ $type: 'color', $value: '#0000004d' });
+  });
+
+  it('원색 + 투명도 별칭 → 색 자체 알파에 곱한다', () => {
+    expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'COLOR', r: 1, g: 1, b: 1, a: 0.5 }, opacity: { kind: 'ALIAS', id: 'op30' } }))
+      .toEqual({ $type: 'color', $value: '#ffffff26' });
+  });
+
+  it('별칭이 여러 번 이어져도 끝까지 따라간다', () => {
+    const mid = v({ id: 'mid', name: 'Color/Black', collectionId: 'c1', resolvedType: 'COLOR', valuesByMode: { m1: { kind: 'ALIAS', id: 'black' } } });
+    expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'mid' }, opacity: { kind: 'FLOAT', value: 30 } }, [mid]))
+      .toEqual({ $type: 'color', $value: '#0000004d' });
+  });
+
+  it('모드가 여러 개 — 같은 컬렉션 참조는 같은 모드, 다른 컬렉션은 기본(첫) 모드', () => {
+    const theme = { id: 'c3', name: 'Theme', modes: [{ modeId: 'L', name: 'Light' }, { modeId: 'D', name: 'Dark' }] };
+    const brand = { id: 'c4', name: 'Brand', modes: [{ modeId: 'A', name: 'A' }, { modeId: 'B', name: 'B' }] };
+    const fg = v({ id: 'fg', name: 'Fg', collectionId: 'c3', resolvedType: 'COLOR', valuesByMode: { L: { kind: 'COLOR', r: 0, g: 0, b: 0, a: 1 }, D: { kind: 'COLOR', r: 1, g: 1, b: 1, a: 1 } } });
+    const op = v({ id: 'op', name: 'Op', collectionId: 'c4', resolvedType: 'FLOAT', scopes: ['OPACITY'], valuesByMode: { A: { kind: 'FLOAT', value: 50 }, B: { kind: 'FLOAT', value: 10 } } });
+    const dim = { kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'fg' }, opacity: { kind: 'ALIAS', id: 'op' } } as const;
+    const scrim = v({ id: 'scrim', name: 'Scrim', collectionId: 'c3', resolvedType: 'COLOR', valuesByMode: { L: dim, D: dim } });
+    const sets = buildVariableSets(fig({ collections: [theme, brand], variables: [fg, op, scrim] }));
+    expect((sets['Theme/Light'] as any).Scrim.$value).toBe('#00000080');
+    expect((sets['Theme/Dark'] as any).Scrim.$value).toBe('#ffffff80');
+  });
+
+  it('대상 변수가 없으면 참조한 변수 이름을 담아 throw', () => {
+    expect(() => out({ kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'ghost' }, opacity: { kind: 'FLOAT', value: 30 } }))
+      .toThrowError(/Overlay\/Normal/);
+  });
+});
+
 describe('깨진 참조 — 에러에 이름을 담아 던진다', () => {
   it('별칭 대상이 없으면 참조한 변수 이름을 담아 throw', () => {
     const figma = fig({
