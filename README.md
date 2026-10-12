@@ -49,7 +49,7 @@ Dev Mode에서는 Inspect 패널 하단 **Plugins** 메뉴에서 실행.
 | 텍스트 스타일 | `Text Styles` | typography (`fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, textDecoration`) |
 | 이펙트 스타일 — 그림자만 | `Effect Styles` | shadow (`[{ color, offsetX, offsetY, blur, spread, inset }]`) |
 | 이펙트 스타일 — 흐림 등 섞임 | `Effect Styles` | effect (`[{ type: dropShadow\|innerShadow\|layerBlur\|backgroundBlur, … }]`) |
-| 색 스타일 — 단색 하나 / 그라디언트 하나 / 그 밖 | `Color Styles` | color / gradient (`{ type, angle?, stops }`) / paint (`[…]`) |
+| 색 스타일 — 단색 하나 / 그라디언트 하나 / 그 밖 | `Color Styles` | color / gradient (`{ type, transform, stops }` — transform 은 피그마 gradientTransform 그대로) / paint (`[…]`) |
 | 레이아웃 가이드 스타일 | `Grid Styles` | grid (`[{ pattern, count, sectionSize, gutterSize, offset, alignment, color }]`) |
 
 - **값**: 변수에 연결된 값 → 별칭 `{A.B.C}`, 연결 안 된 값 → 스타일의 실제 값(단위 포함 `"16px"`·`"-1%"`·`"normal"`, 색 hex).

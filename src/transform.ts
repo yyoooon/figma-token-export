@@ -302,10 +302,12 @@ function gradientValue(
   g: Extract<SerializedPaint, { kind: 'GRADIENT' }>,
   ref: (id: string) => string,
 ): Record<string, unknown> {
-  const out: Record<string, unknown> = { type: g.gradientType.toLowerCase() };
-  if (g.gradientType === 'LINEAR') {
-    out.angle = round((Math.atan2(g.transform[0][1], g.transform[0][0]) * 180) / Math.PI);
-  }
+  // 각도·중심 등으로 줄이지 않고 피그마 변환 행렬(gradientTransform) 그대로 — 해석은 프로젝트 변환기 몫.
+  // (각도로 줄이면 CSS 기준과 축·방향이 달라 90° 어긋나고, 방사형은 중심·크기를 잃는다)
+  const out: Record<string, unknown> = {
+    type: g.gradientType.toLowerCase(),
+    transform: g.transform.map((row) => row.map(round)),
+  };
   out.stops = g.stops.map((st) => ({ color: st.boundColor ? ref(st.boundColor) : rgbaToHex(st.color), position: round(st.position) }));
   if (g.opacity < 1) out.opacity = round(g.opacity);
   return out;

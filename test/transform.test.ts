@@ -288,7 +288,7 @@ describe('buildPaintTokens', () => {
     expect(tokens[0].leaf.$type).toBe('color');
   });
 
-  it('그라디언트 하나 → gradient (선형은 각도)', () => {
+  it('그라디언트 하나 → gradient (각도로 줄이지 않고 피그마 변환 행렬 그대로)', () => {
     const { tokens } = buildPaintTokens(
       fig({
         variables: [white],
@@ -312,9 +312,17 @@ describe('buildPaintTokens', () => {
         ],
       }),
     );
+    expect(tokens[0].leaf.$value).not.toHaveProperty('angle');
     expect(tokens[0].leaf).toMatchObject({
       $type: 'gradient',
-      $value: { type: 'linear', angle: 90, stops: [{ color: '{Fill.Base}', position: 0 }, { color: '#ffffff00', position: 1 }] },
+      $value: {
+        type: 'linear',
+        transform: [
+          [0, 1, 0],
+          [-1, 0, 1],
+        ],
+        stops: [{ color: '{Fill.Base}', position: 0 }, { color: '#ffffff00', position: 1 }],
+      },
     });
   });
 
