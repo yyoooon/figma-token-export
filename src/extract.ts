@@ -1,6 +1,10 @@
 import type {
+  SerializedBlur,
   SerializedEffectStyle,
   SerializedFigma,
+  SerializedGridStyle,
+  SerializedPaint,
+  SerializedPaintStyle,
   SerializedShadowLayer,
   SerializedTextStyle,
   SerializedValue,
@@ -77,18 +81,22 @@ export async function extractFigma(): Promise<SerializedFigma> {
   });
 
   const effectStylesRaw = await figma.getLocalEffectStylesAsync();
-  const paintStyles = await figma.getLocalPaintStylesAsync();
-  const gridStyles = await figma.getLocalGridStylesAsync();
-  const skippedEffects: Record<string, number> = {};
+  const paintStylesRaw = await figma.getLocalPaintStylesAsync();
+  const gridStylesRaw = await figma.getLocalGridStylesAsync();
+  const boundId = (raw: unknown, prop: string): string | undefined =>
+    ((raw as { boundVariables?: Record<string, { id?: string }> }).boundVariables ?? {})[prop]?.id;
 
   const effectStyles: SerializedEffectStyle[] = effectStylesRaw.map((s) => {
     const shadows: SerializedShadowLayer[] = [];
-    const otherEffects: string[] = [];
+    const blurs: SerializedBlur[] = [];
+    const others: string[] = [];
     for (const e of s.effects) {
       if (e.type === 'DROP_SHADOW' || e.type === 'INNER_SHADOW') {
-        const raw = ((e as { boundVariables?: unknown }).boundVariables ?? {}) as Record<string, { id: string }>;
         const bound: SerializedShadowLayer['boundVariables'] = {};
-        for (const prop of SHADOW_PROPS) if (raw[prop]?.id) bound[prop] = raw[prop].id;
+        for (const prop of SHADOW_PROPS) {
+          const id = boundId(e, prop);
+          if (id) bound[prop] = id;
+        }
         shadows.push({
           inset: e.type === 'INNER_SHADOW',
           visible: e.visible,
@@ -99,19 +107,48 @@ export async function extractFigma(): Promise<SerializedFigma> {
           spread: e.spread ?? 0,
           boundVariables: bound,
         });
+      } else if (e.type === 'LAYER_BLUR' || e.type === 'BACKGROUND_BLUR') {
+        const id = boundId(e, 'radius');
+        blurs.push({ type: e.type, visible: e.visible, radius: e.radius, ...(id ? { boundRadius: id } : {}) });
       } else {
-        otherEffects.push(e.type);
-        skippedEffects[e.type] = (skippedEffects[e.type] ?? 0) + 1;
+        others.push((e as { type: string }).type);
       }
     }
-    return { name: s.name, shadows, otherEffects };
+    return { name: s.name, shadows, blurs, others };
   });
 
-  return {
-    collections,
-    variables,
-    textStyles,
-    effectStyles,
-    skipped: { paintStyles: paintStyles.length, gridStyles: gridStyles.length, effects: skippedEffects },
-  };
+  const paintStyles: SerializedPaintStyle[] = paintStylesRaw.map((s) => ({
+    name: s.name,
+    paints: s.paints.map((p): SerializedPaint => {
+      const visible = p.visible ?? true;
+      if (p.type === 'SOLID') {
+        const id = boundId(p, 'color');
+        return { kind: 'SOLID', visible, color: { r: p.color.r, g: p.color.g, b: p.color.b }, opacity: p.opacity ?? 1, ...(id ? { boundColor: id } : {}) };
+      }
+      if (p.type.startsWith('GRADIENT_')) {
+        const g = p as GradientPaint;
+        return {
+          kind: 'GRADIENT',
+          gradientType: g.type.replace('GRADIENT_', '') as 'LINEAR' | 'RADIAL' | 'ANGULAR' | 'DIAMOND',
+          visible,
+          opacity: g.opacity ?? 1,
+          stops: g.gradientStops.map((st) => {
+            const id = boundId(st, 'color');
+            return { color: { r: st.color.r, g: st.color.g, b: st.color.b, a: st.color.a }, position: st.position, ...(id ? { boundColor: id } : {}) };
+          }),
+          transform: g.gradientTransform.map((row) => [...row]),
+        };
+      }
+      if (p.type === 'IMAGE') return { kind: 'IMAGE', visible, imageHash: p.imageHash, scaleMode: p.scaleMode };
+      return { kind: 'OTHER', visible, type: p.type };
+    }),
+  }));
+
+  // 격자는 피그마 값 그대로(프로젝트 변환기가 필요한 것만 쓴다).
+  const gridStyles: SerializedGridStyle[] = gridStylesRaw.map((s) => ({
+    name: s.name,
+    grids: s.layoutGrids.map((g) => ({ ...(g as unknown as Record<string, unknown>) })),
+  }));
+
+  return { collections, variables, textStyles, effectStyles, paintStyles, gridStyles };
 }

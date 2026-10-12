@@ -62,11 +62,47 @@ export interface SerializedShadowLayer {
   boundVariables: Partial<Record<'color' | 'offsetX' | 'offsetY' | 'radius' | 'spread', string>>;
 }
 
-// 이펙트 스타일. 그림자 겹만 토큰이 된다 — 흐림 등 그 밖의 효과는 종류 이름만 남겨 개수를 알린다.
+export interface SerializedBlur {
+  type: 'LAYER_BLUR' | 'BACKGROUND_BLUR';
+  visible: boolean;
+  radius: number;
+  boundRadius?: string; // 변수 id
+}
+
+// 이펙트 스타일 — 그림자·흐림을 나눠 담고, 처음 보는 효과는 종류 이름만 남긴다(전부 내보낸다).
 export interface SerializedEffectStyle {
   name: string; // 'Elevation/Xsmall'
   shadows: SerializedShadowLayer[];
-  otherEffects: string[]; // ['LAYER_BLUR']
+  blurs: SerializedBlur[];
+  others: string[]; // ['NOISE']
+}
+
+type RGB = { r: number; g: number; b: number };
+type RGBA = RGB & { a: number };
+
+export type SerializedPaint =
+  | { kind: 'SOLID'; visible: boolean; color: RGB; opacity: number; boundColor?: string }
+  | {
+      kind: 'GRADIENT';
+      gradientType: 'LINEAR' | 'RADIAL' | 'ANGULAR' | 'DIAMOND';
+      visible: boolean;
+      opacity: number;
+      stops: { color: RGBA; position: number; boundColor?: string }[];
+      transform: number[][];
+    }
+  | { kind: 'IMAGE'; visible: boolean; imageHash: string | null; scaleMode: string }
+  | { kind: 'OTHER'; visible: boolean; type: string };
+
+// 색(페인트) 스타일 — 단색·그라디언트·이미지 모두.
+export interface SerializedPaintStyle {
+  name: string;
+  paints: SerializedPaint[];
+}
+
+// 레이아웃 가이드(격자) 스타일 — 피그마 값 그대로.
+export interface SerializedGridStyle {
+  name: string;
+  grids: Record<string, unknown>[];
 }
 
 export interface SerializedFigma {
@@ -74,8 +110,8 @@ export interface SerializedFigma {
   variables: SerializedVariable[];
   textStyles: SerializedTextStyle[];
   effectStyles: SerializedEffectStyle[];
-  // 내보내지 않는 것 — 조용히 버리지 않고 개수를 알린다.
-  skipped: { paintStyles: number; gridStyles: number; effects: Record<string, number> };
+  paintStyles: SerializedPaintStyle[];
+  gridStyles: SerializedGridStyle[];
 }
 
 // ── 출력(tokens.json) 쪽 ──

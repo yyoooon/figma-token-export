@@ -126,15 +126,13 @@ describe('extractFigma', () => {
     });
   });
 
-  it('이펙트 스타일의 그림자 겹과 연결 변수, 건너뛸 스타일 개수를 읽는다', async () => {
+  it('이펙트(그림자·흐림·그 밖), 색(단색·그라디언트·이미지), 격자 스타일을 모두 읽는다', async () => {
     (globalThis as any).figma = {
       variables: {
         getLocalVariableCollectionsAsync: vi.fn().mockResolvedValue([]),
         getLocalVariablesAsync: vi.fn().mockResolvedValue([]),
       },
       getLocalTextStylesAsync: vi.fn().mockResolvedValue([]),
-      getLocalPaintStylesAsync: vi.fn().mockResolvedValue([{ name: 'Guide/Red' }, { name: 'Guide/Blue' }]),
-      getLocalGridStylesAsync: vi.fn().mockResolvedValue([{ name: 'Icon drawing guide' }]),
       getLocalEffectStylesAsync: vi.fn().mockResolvedValue([
         {
           name: 'Elevation/Xsmall',
@@ -148,8 +146,40 @@ describe('extractFigma', () => {
               spread: 0,
               boundVariables: { color: { id: 'vc' } },
             },
-            { type: 'LAYER_BLUR', visible: true, radius: 4 },
+            { type: 'LAYER_BLUR', visible: true, radius: 4, boundVariables: { radius: { id: 'vr' } } },
+            { type: 'NOISE', visible: true },
           ],
+        },
+      ]),
+      getLocalPaintStylesAsync: vi.fn().mockResolvedValue([
+        {
+          name: 'Guide/Red',
+          paints: [{ type: 'SOLID', visible: true, color: { r: 1, g: 0, b: 0 }, opacity: 0.5, boundVariables: { color: { id: 'vc' } } }],
+        },
+        {
+          name: 'Fade/Top',
+          paints: [
+            {
+              type: 'GRADIENT_LINEAR',
+              visible: true,
+              opacity: 1,
+              gradientStops: [
+                { color: { r: 1, g: 1, b: 1, a: 1 }, position: 0, boundVariables: { color: { id: 'vw' } } },
+                { color: { r: 1, g: 1, b: 1, a: 0 }, position: 1 },
+              ],
+              gradientTransform: [
+                [0, 1, 0],
+                [-1, 0, 1],
+              ],
+            },
+          ],
+        },
+        { name: 'Photo', paints: [{ type: 'IMAGE', visible: true, imageHash: 'abc', scaleMode: 'FILL' }] },
+      ]),
+      getLocalGridStylesAsync: vi.fn().mockResolvedValue([
+        {
+          name: 'Icon drawing guide',
+          layoutGrids: [{ pattern: 'GRID', sectionSize: 1, visible: true, color: { r: 1, g: 0, b: 0, a: 0.1 } }],
         },
       ]),
     };
@@ -169,9 +199,36 @@ describe('extractFigma', () => {
             boundVariables: { color: 'vc' },
           },
         ],
-        otherEffects: ['LAYER_BLUR'],
+        blurs: [{ type: 'LAYER_BLUR', visible: true, radius: 4, boundRadius: 'vr' }],
+        others: ['NOISE'],
       },
     ]);
-    expect(out.skipped).toEqual({ paintStyles: 2, gridStyles: 1, effects: { LAYER_BLUR: 1 } });
+    expect(out.paintStyles).toEqual([
+      { name: 'Guide/Red', paints: [{ kind: 'SOLID', visible: true, color: { r: 1, g: 0, b: 0 }, opacity: 0.5, boundColor: 'vc' }] },
+      {
+        name: 'Fade/Top',
+        paints: [
+          {
+            kind: 'GRADIENT',
+            gradientType: 'LINEAR',
+            visible: true,
+            opacity: 1,
+            stops: [
+              { color: { r: 1, g: 1, b: 1, a: 1 }, position: 0, boundColor: 'vw' },
+              { color: { r: 1, g: 1, b: 1, a: 0 }, position: 1 },
+            ],
+            transform: [
+              [0, 1, 0],
+              [-1, 0, 1],
+            ],
+          },
+        ],
+      },
+      { name: 'Photo', paints: [{ kind: 'IMAGE', visible: true, imageHash: 'abc', scaleMode: 'FILL' }] },
+    ]);
+    expect(out.gridStyles).toEqual([
+      { name: 'Icon drawing guide', grids: [{ pattern: 'GRID', sectionSize: 1, visible: true, color: { r: 1, g: 0, b: 0, a: 0.1 } }] },
+    ]);
+    expect('skipped' in out).toBe(false);
   });
 });
