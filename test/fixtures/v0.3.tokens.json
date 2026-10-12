@@ -10,11 +10,7 @@
         "typography": 33,
         "shadow": 5
       },
-      "skipped": {
-        "paintStyles": 0,
-        "gridStyles": 0,
-        "effects": {}
-      }
+      "hiddenLayers": 0
     }
   },
   "Primitive/Default": {
@@ -2405,7 +2401,9 @@
           }
         }
       }
-    },
+    }
+  },
+  "Text Styles": {
     "Display": {
       "L": {
         "Bold": {
@@ -2975,7 +2973,7 @@
       }
     }
   },
-  "Styles/Default": {
+  "Effect Styles": {
     "Elevation": {
       "Xsmall": {
         "$type": "shadow",

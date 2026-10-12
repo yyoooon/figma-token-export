@@ -325,6 +325,17 @@ describe('buildPaintTokens', () => {
 });
 
 describe('buildGridTokens', () => {
+  it('연결된 값은 별칭으로 바꾸고 원본 boundVariables 는 남기지 않는다', () => {
+    const gap = v({ id: 'vg', name: 'Spacing/100', collectionId: 'c', resolvedType: 'FLOAT', scopes: ['GAP'] });
+    const { tokens } = buildGridTokens(
+      fig({
+        variables: [gap],
+        gridStyles: [{ name: 'Columns', grids: [{ pattern: 'COLUMNS', count: 4, gutterSize: 8, visible: true, boundVariables: { gutterSize: { type: 'VARIABLE_ALIAS', id: 'vg' } } }] }],
+      }),
+    );
+    expect(tokens[0].leaf.$value).toEqual([{ pattern: 'COLUMNS', count: 4, gutterSize: '{Spacing.100}' }]);
+  });
+
   it('격자는 grid 배열, 색은 hex', () => {
     const { tokens } = buildGridTokens(
       fig({ gridStyles: [{ name: 'Icon drawing guide', grids: [{ pattern: 'GRID', sectionSize: 1, visible: true, color: { r: 1, g: 0, b: 0, a: 0.1 } }] }] }),

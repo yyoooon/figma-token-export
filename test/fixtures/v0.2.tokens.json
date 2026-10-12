@@ -6,15 +6,12 @@
         "fontFamily": 1,
         "dimension": 52,
         "number": 13,
-        "color": 696,
+        "color": 698,
         "typography": 22,
-        "shadow": 3
+        "shadow": 3,
+        "grid": 1
       },
-      "skipped": {
-        "paintStyles": 2,
-        "gridStyles": 1,
-        "effects": {}
-      }
+      "hiddenLayers": 0
     }
   },
   "Primitive/Light": {
@@ -1831,368 +1828,6 @@
             "scopes": [
               "STROKE_FLOAT"
             ]
-          }
-        }
-      }
-    },
-    "Display": {
-      "lg-bold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-5xl}",
-          "fontWeight": "{Typography.Weight.Bold}",
-          "lineHeight": "{Typography.Light height.leading-11}",
-          "letterSpacing": "{Typography.Letter spacing.tight}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-bold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-4xl}",
-          "fontWeight": "{Typography.Weight.Bold}",
-          "lineHeight": "{Typography.Light height.leading-10}",
-          "letterSpacing": "{Typography.Letter spacing.tight}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      }
-    },
-    "Headline": {
-      "lg-bold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-3xl}",
-          "fontWeight": "{Typography.Weight.Bold}",
-          "lineHeight": "{Typography.Light height.leading-9}",
-          "letterSpacing": "{Typography.Letter spacing.tight}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-bold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-2xl}",
-          "fontWeight": "{Typography.Weight.Bold}",
-          "lineHeight": "{Typography.Light height.leading-8}",
-          "letterSpacing": "{Typography.Letter spacing.tight}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      }
-    },
-    "Title": {
-      "lg-bold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-2xl}",
-          "fontWeight": "{Typography.Weight.Bold}",
-          "lineHeight": "{Typography.Light height.leading-8}",
-          "letterSpacing": "{Typography.Letter spacing.tight}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-bold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-xl}",
-          "fontWeight": "{Typography.Weight.Bold}",
-          "lineHeight": "{Typography.Light height.leading-7}",
-          "letterSpacing": "{Typography.Letter spacing.tight}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "s-bold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-lg}",
-          "fontWeight": "{Typography.Weight.Bold}",
-          "lineHeight": "{Typography.Light height.leading-6}",
-          "letterSpacing": "{Typography.Letter spacing.tight}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      }
-    },
-    "Body": {
-      "xl-semibold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-xl}",
-          "fontWeight": "{Typography.Weight.Semibold}",
-          "lineHeight": "{Typography.Light height.leading-7}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "lg-semibold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-lg}",
-          "fontWeight": "{Typography.Weight.Semibold}",
-          "lineHeight": "{Typography.Light height.leading-6}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "lg-medium": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-lg}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-6}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-semibold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-m}",
-          "fontWeight": "{Typography.Weight.Semibold}",
-          "lineHeight": "{Typography.Light height.leading-5}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-medium": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-m}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-5}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "s-semibold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-s}",
-          "fontWeight": "{Typography.Weight.Semibold}",
-          "lineHeight": "{Typography.Light height.leading-4}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "s-medium": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-s}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-4}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      }
-    },
-    "Caption": {
-      "lg-semibold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-s}",
-          "fontWeight": "{Typography.Weight.Semibold}",
-          "lineHeight": "{Typography.Light height.leading-3}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "lg-medium": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-s}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-3}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "lg-medium-underline": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-s}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-3}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "underline"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-semibold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-xs}",
-          "fontWeight": "{Typography.Weight.Semibold}",
-          "lineHeight": "{Typography.Light height.leading-2}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-medium-underline": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-xs}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-2}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "underline"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "m-medium": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-xs}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-2}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "s-semibold": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-xxs}",
-          "fontWeight": "{Typography.Weight.Semibold}",
-          "lineHeight": "{Typography.Light height.leading-1}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
-          }
-        }
-      },
-      "s-medium": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{Typography.Font.Sans-serif}",
-          "fontSize": "{Typography.Size.text-xxs}",
-          "fontWeight": "{Typography.Weight.Medium}",
-          "lineHeight": "{Typography.Light height.leading-1}",
-          "letterSpacing": "{Typography.Letter spacing.normal}",
-          "textDecoration": "none"
-        },
-        "$extensions": {
-          "com.huray.token-export": {
-            "source": "textStyle"
           }
         }
       }
@@ -9979,7 +9614,371 @@
       }
     }
   },
-  "Styles/Default": {
+  "Text Styles": {
+    "Display": {
+      "lg-bold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-5xl}",
+          "fontWeight": "{Typography.Weight.Bold}",
+          "lineHeight": "{Typography.Light height.leading-11}",
+          "letterSpacing": "{Typography.Letter spacing.tight}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-bold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-4xl}",
+          "fontWeight": "{Typography.Weight.Bold}",
+          "lineHeight": "{Typography.Light height.leading-10}",
+          "letterSpacing": "{Typography.Letter spacing.tight}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      }
+    },
+    "Headline": {
+      "lg-bold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-3xl}",
+          "fontWeight": "{Typography.Weight.Bold}",
+          "lineHeight": "{Typography.Light height.leading-9}",
+          "letterSpacing": "{Typography.Letter spacing.tight}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-bold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-2xl}",
+          "fontWeight": "{Typography.Weight.Bold}",
+          "lineHeight": "{Typography.Light height.leading-8}",
+          "letterSpacing": "{Typography.Letter spacing.tight}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      }
+    },
+    "Title": {
+      "lg-bold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-2xl}",
+          "fontWeight": "{Typography.Weight.Bold}",
+          "lineHeight": "{Typography.Light height.leading-8}",
+          "letterSpacing": "{Typography.Letter spacing.tight}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-bold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-xl}",
+          "fontWeight": "{Typography.Weight.Bold}",
+          "lineHeight": "{Typography.Light height.leading-7}",
+          "letterSpacing": "{Typography.Letter spacing.tight}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "s-bold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-lg}",
+          "fontWeight": "{Typography.Weight.Bold}",
+          "lineHeight": "{Typography.Light height.leading-6}",
+          "letterSpacing": "{Typography.Letter spacing.tight}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      }
+    },
+    "Body": {
+      "xl-semibold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-xl}",
+          "fontWeight": "{Typography.Weight.Semibold}",
+          "lineHeight": "{Typography.Light height.leading-7}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "lg-semibold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-lg}",
+          "fontWeight": "{Typography.Weight.Semibold}",
+          "lineHeight": "{Typography.Light height.leading-6}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "lg-medium": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-lg}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-6}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-semibold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-m}",
+          "fontWeight": "{Typography.Weight.Semibold}",
+          "lineHeight": "{Typography.Light height.leading-5}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-medium": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-m}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-5}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "s-semibold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-s}",
+          "fontWeight": "{Typography.Weight.Semibold}",
+          "lineHeight": "{Typography.Light height.leading-4}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "s-medium": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-s}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-4}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      }
+    },
+    "Caption": {
+      "lg-semibold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-s}",
+          "fontWeight": "{Typography.Weight.Semibold}",
+          "lineHeight": "{Typography.Light height.leading-3}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "lg-medium": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-s}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-3}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "lg-medium-underline": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-s}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-3}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "underline"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-semibold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-xs}",
+          "fontWeight": "{Typography.Weight.Semibold}",
+          "lineHeight": "{Typography.Light height.leading-2}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-medium-underline": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-xs}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-2}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "underline"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "m-medium": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-xs}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-2}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "s-semibold": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-xxs}",
+          "fontWeight": "{Typography.Weight.Semibold}",
+          "lineHeight": "{Typography.Light height.leading-1}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      },
+      "s-medium": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{Typography.Font.Sans-serif}",
+          "fontSize": "{Typography.Size.text-xxs}",
+          "fontWeight": "{Typography.Weight.Medium}",
+          "lineHeight": "{Typography.Light height.leading-1}",
+          "letterSpacing": "{Typography.Letter spacing.normal}",
+          "textDecoration": "none"
+        },
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "textStyle"
+          }
+        }
+      }
+    }
+  },
+  "Effect Styles": {
     "Button hover": {
       "$type": "shadow",
       "$value": [
@@ -10031,6 +10030,45 @@
       "$extensions": {
         "com.huray.token-export": {
           "source": "effectStyle"
+        }
+      }
+    }
+  },
+  "Color Styles": {
+    "Guide": {
+      "Value": {
+        "$type": "color",
+        "$value": "#ff00ff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "colorStyle"
+          }
+        }
+      },
+      "Size": {
+        "$type": "color",
+        "$value": "#5099ff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "colorStyle"
+          }
+        }
+      }
+    }
+  },
+  "Grid Styles": {
+    "Icon drawing guide": {
+      "$type": "grid",
+      "$value": [
+        {
+          "pattern": "GRID",
+          "sectionSize": 2,
+          "color": "#ff000033"
+        }
+      ],
+      "$extensions": {
+        "com.huray.token-export": {
+          "source": "gridStyle"
         }
       }
     }

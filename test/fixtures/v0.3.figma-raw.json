@@ -4271,7 +4271,8 @@
           "boundVariables": {}
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     },
     {
       "name": "Elevation/Small",
@@ -4307,7 +4308,8 @@
           "boundVariables": {}
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     },
     {
       "name": "Elevation/Medium",
@@ -4343,7 +4345,8 @@
           "boundVariables": {}
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     },
     {
       "name": "Elevation/Large",
@@ -4379,7 +4382,8 @@
           "boundVariables": {}
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     },
     {
       "name": "Elevation/Xlarge",
@@ -4415,12 +4419,10 @@
           "boundVariables": {}
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     }
   ],
-  "skipped": {
-    "paintStyles": 0,
-    "gridStyles": 0,
-    "effects": {}
-  }
+  "paintStyles": [],
+  "gridStyles": []
 }

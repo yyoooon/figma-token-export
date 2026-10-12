@@ -13199,7 +13199,8 @@
           }
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     },
     {
       "name": "Inner Shadow",
@@ -13224,7 +13225,8 @@
           }
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     },
     {
       "name": "Elevate",
@@ -13249,12 +13251,59 @@
           }
         }
       ],
-      "otherEffects": []
+      "blurs": [],
+      "others": []
     }
   ],
-  "skipped": {
-    "paintStyles": 2,
-    "gridStyles": 1,
-    "effects": {}
-  }
+  "paintStyles": [
+    {
+      "name": "Guide/Value",
+      "paints": [
+        {
+          "kind": "SOLID",
+          "visible": true,
+          "color": {
+            "r": 1,
+            "g": 0,
+            "b": 1
+          },
+          "opacity": 1
+        }
+      ]
+    },
+    {
+      "name": "Guide/Size",
+      "paints": [
+        {
+          "kind": "SOLID",
+          "visible": true,
+          "color": {
+            "r": 0.3122312128543854,
+            "g": 0.5988015532493591,
+            "b": 1
+          },
+          "opacity": 1
+        }
+      ]
+    }
+  ],
+  "gridStyles": [
+    {
+      "name": "Icon drawing guide",
+      "grids": [
+        {
+          "pattern": "GRID",
+          "visible": true,
+          "color": {
+            "r": 1,
+            "g": 0,
+            "b": 0,
+            "a": 0.20000000298023224
+          },
+          "sectionSize": 2,
+          "boundVariables": {}
+        }
+      ]
+    }
+  ]
 }

@@ -343,16 +343,24 @@ export function buildPaintTokens(figma: SerializedFigma): Built {
 }
 
 export function buildGridTokens(figma: SerializedFigma): Built {
+  const names = nameById(figma);
   const tokens: StyleToken[] = [];
   let hidden = 0;
   for (const style of figma.gridStyles) {
     const grids = style.grids.filter((g) => g.visible !== false);
     hidden += style.grids.length - grids.length;
     if (!grids.length) continue;
-    const $value = grids.map(({ visible: _v, color, ...rest }) => ({
-      ...rest,
-      ...(color ? { color: rgbaToHex(color as { r: number; g: number; b: number; a: number }) } : {}),
-    }));
+    const $value = grids.map(({ visible: _v, color, boundVariables, ...rest }) => {
+      const grid: Record<string, unknown> = {
+        ...rest,
+        ...(color ? { color: rgbaToHex(color as { r: number; g: number; b: number; a: number }) } : {}),
+      };
+      // 변수에 연결된 값은 다른 스타일처럼 별칭으로.
+      for (const [key, alias] of Object.entries((boundVariables ?? {}) as Record<string, { id?: string }>)) {
+        if (alias?.id) grid[key] = refOf(names, '격자 스타일', style.name, alias.id);
+      }
+      return grid;
+    });
     tokens.push({ path: figmaNameToPath(style.name), leaf: { $type: 'grid', $value, $extensions: { [META]: { source: 'gridStyle' } } } });
   }
   return { tokens, hidden };

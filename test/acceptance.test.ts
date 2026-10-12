@@ -5,11 +5,10 @@ import { transform } from '../src/transform';
 const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, import.meta.url), 'utf8'));
 const META = 'com.huray.token-export';
 
-// 형식 2에서 새로 붙은 것(메타·textDecoration·그림자 묶음)을 걷어 형식 1과 비교할 수 있게 한다.
-function stripV2(root: any): any {
-  const { ['Styles/Default']: _shadows, ...rest } = root;
-  return strip(rest);
-}
+const STYLE_SETS = ['Text Styles', 'Effect Styles', 'Color Styles', 'Grid Styles'];
+const TYPO_GROUPS = ['Display', 'Headline', 'Title', 'Body', 'Caption'];
+
+// 형식 2에서 새로 붙은 것(메타·textDecoration·스타일 묶음)을 걷어 형식 1과 비교할 수 있게 한다.
 function strip(node: any): any {
   if (Array.isArray(node) || node == null || typeof node !== 'object') return node;
   const out: any = {};
@@ -20,16 +19,25 @@ function strip(node: any): any {
   if (out.$type === 'typography') delete out.$value.textDecoration;
   return out;
 }
+const without = (o: any, keys: string[]) => Object.fromEntries(Object.entries(o).filter(([k]) => !keys.includes(k)));
 
 describe('합격 — v0.2', () => {
-  const out = transform(load('v0.2.figma-raw.json'));
+  const out = transform(load('v0.2.figma-raw.json')) as any;
+  const hub = load('hub-v0.2.tokens.json');
 
-  it('그림자 3개가 스타일 이름으로 (안쪽 그림자는 Inner Shadow — 의도된 이름 변경)', () => {
-    expect(Object.keys((out as any)['Styles/Default']).sort()).toEqual(['Button hover', 'Elevate', 'Inner Shadow']);
+  it('변수 묶음은 허브 v0.2 와 같다 (허브에 섞여 있던 타이포 그룹 제외)', () => {
+    const hubVars = { ...hub, 'Primitive/Light': without(hub['Primitive/Light'], TYPO_GROUPS) };
+    expect(strip(without(out, STYLE_SETS))).toEqual(hubVars);
   });
 
-  it('메타·밑줄·그림자 묶음을 걷으면 허브 v0.2(형식 1)와 같다', () => {
-    expect(stripV2(out)).toEqual(load('hub-v0.2.tokens.json'));
+  it('Text Styles 22개는 허브 v0.2 의 타이포와 같다', () => {
+    expect(strip(out['Text Styles'])).toEqual(Object.fromEntries(TYPO_GROUPS.map((g) => [g, hub['Primitive/Light'][g]])));
+  });
+
+  it('그림자 3 (안쪽 그림자는 Inner Shadow — 의도된 이름) · 색 스타일 2 · 격자 1', () => {
+    expect(Object.keys(out['Effect Styles']).sort()).toEqual(['Button hover', 'Elevate', 'Inner Shadow']);
+    expect(Object.keys(out['Color Styles'].Guide).sort()).toEqual(['Size', 'Value']);
+    expect(out['Grid Styles']['Icon drawing guide'].$type).toBe('grid');
   });
 
   it('출력 고정본과 같다', () => {
@@ -45,7 +53,7 @@ describe('합격 — v0.3', () => {
   });
 
   it('Body/M/Bold 와 Body/M/Regular 가 공존하고 자간 -1%', () => {
-    const body = out['Component/Mode 1'].Body.M;
+    const body = out['Text Styles'].Body.M;
     expect(Object.keys(body).sort()).toEqual(['Bold', 'Medium', 'Regular', 'Semibold']);
     expect(body.Bold.$value.letterSpacing).toBe('-1%');
     expect(body.Bold.$value.fontWeight).toBe('{Typography.Weight.Bold}');
@@ -53,7 +61,7 @@ describe('합격 — v0.3', () => {
 
   it('그림자 5단계 (Elevation)', () => {
     expect(out.$extensions[META].counts.shadow).toBe(5);
-    expect(Object.keys(out['Styles/Default'].Elevation)).toHaveLength(5);
+    expect(Object.keys(out['Effect Styles'].Elevation)).toHaveLength(5);
   });
 
   it('모든 변수 잎에 scopes 가 있다', () => {
