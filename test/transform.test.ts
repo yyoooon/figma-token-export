@@ -445,6 +445,13 @@ describe('형식 2 — 메타·겹침·모드', () => {
     expect(out.$extensions['com.huray.token-export'].counts.shadow).toBe(1);
   });
 
+  it('숨긴 그림자 겹은 토큰에서 빠지되 skipped 에 센다', () => {
+    const hidden = { inset: false, visible: false, color: { r: 0, g: 0, b: 0, a: 0.1 }, offsetX: 0, offsetY: 1, blur: 2, spread: 0, boundVariables: {} };
+    const out = transform(fig({ effectStyles: [{ name: 'Elevation/Xsmall', shadows: [hidden], otherEffects: [] }] })) as any;
+    expect(out['Styles/Default']).toBeUndefined();
+    expect(out.$extensions['com.huray.token-export'].skipped.effects).toEqual({ HIDDEN_SHADOW: 1 });
+  });
+
   it('글자 크기 미연결 스타일만 있으면 Styles/Default 묶음에 둔다', () => {
     const out = transform(fig({ textStyles: [{ name: 'Body/M/Bold', boundVariables: {}, values: baseValues }] })) as any;
     expect(out['Styles/Default'].Body.M.Bold.$type).toBe('typography');

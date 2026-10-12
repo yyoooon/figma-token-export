@@ -251,7 +251,13 @@ const SHADOW_FIELDS = [
   ['spread', 'spread'],
 ] as const; // [출력 필드, 피그마 boundVariables 키]
 
+// 숨긴 겹은 토큰에서 빼되, 조용히 사라지지 않게 개수를 돌려준다(transform 이 skipped 에 싣는다).
 export function buildShadowTokens(figma: SerializedFigma): { path: string[]; leaf: TokenLeaf }[] {
+  return buildShadowTokensWithHidden(figma).tokens;
+}
+
+export function buildShadowTokensWithHidden(figma: SerializedFigma): { tokens: { path: string[]; leaf: TokenLeaf }[]; hidden: number } {
+  let hidden = 0;
   const names = nameById(figma);
   const ref = (style: string, id: string) => {
     const target = names.get(id);
@@ -262,6 +268,7 @@ export function buildShadowTokens(figma: SerializedFigma): { path: string[]; lea
   const out: { path: string[]; leaf: TokenLeaf }[] = [];
   for (const style of figma.effectStyles) {
     const layers = style.shadows.filter((l) => l.visible);
+    hidden += style.shadows.length - layers.length;
     if (!layers.length) continue;
     const $value = layers.map((l) => {
       const layer: Record<string, string | boolean> = {
@@ -279,7 +286,7 @@ export function buildShadowTokens(figma: SerializedFigma): { path: string[]; lea
       leaf: { $type: 'shadow', $value, $extensions: { [META]: { source: 'effectStyle' } } },
     });
   }
-  return out;
+  return { tokens: out, hidden };
 }
 
 // ── 전체 조립 (Task 6) ──
@@ -316,7 +323,8 @@ export function transform(figma: SerializedFigma): TokensJson {
   }
 
   // 그림자는 이펙트 스타일에서 온다. Effect 변수(v0.2)는 스타일이 참조하는 부품으로만 남는다.
-  for (const t of buildShadowTokens(figma)) {
+  const shadows = buildShadowTokensWithHidden(figma);
+  for (const t of shadows.tokens) {
     sets['Styles/Default'] = sets['Styles/Default'] ?? {};
     insertLeaf(sets['Styles/Default'], t.path, t.leaf, t.path.join('/'));
   }
@@ -332,5 +340,8 @@ export function transform(figma: SerializedFigma): TokensJson {
   };
   for (const tree of Object.values(sets)) count(tree);
 
-  return { $extensions: { [META]: { formatVersion: 2, counts, skipped: figma.skipped } }, ...sets };
+  const skipped = shadows.hidden
+    ? { ...figma.skipped, effects: { ...figma.skipped.effects, HIDDEN_SHADOW: shadows.hidden } }
+    : figma.skipped;
+  return { $extensions: { [META]: { formatVersion: 2, counts, skipped } }, ...sets };
 }
