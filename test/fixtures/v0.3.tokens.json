@@ -1,0 +1,3104 @@
+{
+  "$extensions": {
+    "com.huray.token-export": {
+      "formatVersion": 2,
+      "counts": {
+        "color": 134,
+        "number": 18,
+        "fontFamily": 1,
+        "dimension": 52,
+        "typography": 33,
+        "shadow": 5
+      },
+      "skipped": {
+        "paintStyles": 0,
+        "gridStyles": 0,
+        "effects": {}
+      }
+    }
+  },
+  "Primitive/Default": {
+    "Common": {
+      "0": {
+        "$type": "color",
+        "$value": "#ffffff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": "#000000",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Gray": {
+      "50": {
+        "$type": "color",
+        "$value": "#f7f7f7",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#eeeeee",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#dedede",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#cccccc",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#a8a8a8",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#777777",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#5d5d5d",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#494949",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#343434",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#242424",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Red": {
+      "50": {
+        "$type": "color",
+        "$value": "#feeded",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#fcc6c8",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#faaaad",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#f88488",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#f66c71",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#f4474d",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#de4146",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#ad3237",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#86272a",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#661e20",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Orange": {
+      "50": {
+        "$type": "color",
+        "$value": "#fff0e8",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#fdd1b6",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#fdba93",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#fc9b62",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#fb8743",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#fa6914",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#e46012",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#b24b0e",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#8a3a0b",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#692c08",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Yellow": {
+      "50": {
+        "$type": "color",
+        "$value": "#fef6e6",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#fce2b0",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#fad38a",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#f8bf54",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#f7b333",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#f5a000",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#df9200",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#ae7200",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#875800",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#674300",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Green": {
+      "50": {
+        "$type": "color",
+        "$value": "#ebf7e9",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#c2e5ba",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#a5d898",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#7cc66a",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#62bb4d",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#3baa20",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#369b1d",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#2a7917",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#205e12",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#19470d",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Blue": {
+      "50": {
+        "$type": "color",
+        "$value": "#e6f4fe",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#b0dcfb",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#8acbf9",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#54b3f7",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#33a4f5",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#008df3",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#0080dd",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#0064ad",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#004e86",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#003b66",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "CoolGray": {
+      "50": {
+        "$type": "color",
+        "$value": "#f7f9fc",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#eef2f7",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#e0e6ee",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#ccd5e0",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#a8b2c0",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#718096",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#4b586b",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#374354",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#252f3f",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#1b2334",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "WarmGray": {
+      "50": {
+        "$type": "color",
+        "$value": "#faf9f7",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#f2f0ec",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#e5e1db",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#d2cdc5",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#aaa39a",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#78716c",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#605a54",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#4a4540",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#37332f",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#25221f",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Brand": {
+      "50": {
+        "$type": "color",
+        "$value": "#dee7ff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#cad9ff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#a3bbff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#809cff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#6079ff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#4751ff",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#3e3cd3",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#3428a8",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#27167f",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#1a0459",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    },
+    "Opacity": {
+      "0": {
+        "$type": "number",
+        "$value": 0,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "5": {
+        "$type": "number",
+        "$value": 5,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "10": {
+        "$type": "number",
+        "$value": 10,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "15": {
+        "$type": "number",
+        "$value": 15,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "20": {
+        "$type": "number",
+        "$value": 20,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "30": {
+        "$type": "number",
+        "$value": 30,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "40": {
+        "$type": "number",
+        "$value": 40,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "50": {
+        "$type": "number",
+        "$value": 50,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "60": {
+        "$type": "number",
+        "$value": 60,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "70": {
+        "$type": "number",
+        "$value": 70,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "80": {
+        "$type": "number",
+        "$value": 80,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "90": {
+        "$type": "number",
+        "$value": 90,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "95": {
+        "$type": "number",
+        "$value": 95,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      },
+      "100": {
+        "$type": "number",
+        "$value": 100,
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "OPACITY",
+              "COLOR_OPACITY"
+            ]
+          }
+        }
+      }
+    },
+    "Neutral CoolGray": {
+      "50": {
+        "$type": "color",
+        "$value": "#f7f8f8",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": "#eff1f2",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#e2e5e6",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#d1d4d6",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#aeb2b5",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#7f8387",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#62676b",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#505459",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#383b3f",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#26282b",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": []
+          }
+        }
+      }
+    }
+  },
+  "Semantic/Mode 1": {
+    "Primary": {
+      "Weak": {
+        "$type": "color",
+        "$value": "{Brand.50}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "ALL_SCOPES"
+            ]
+          }
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "{Brand.300}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "ALL_SCOPES"
+            ]
+          }
+        }
+      },
+      "Normal": {
+        "$type": "color",
+        "$value": "{Brand.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "ALL_SCOPES"
+            ]
+          }
+        }
+      }
+    },
+    "Background": {
+      "Normal": {
+        "$type": "color",
+        "$value": "{Common.0}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ]
+          }
+        }
+      },
+      "Alternative": {
+        "$type": "color",
+        "$value": "{CoolGray.50}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ]
+          }
+        }
+      }
+    },
+    "Label": {
+      "Light": {
+        "$type": "color",
+        "$value": "{CoolGray.400}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL"
+            ]
+          }
+        }
+      },
+      "Normal": {
+        "$type": "color",
+        "$value": "{CoolGray.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL"
+            ]
+          }
+        }
+      },
+      "Strong": {
+        "$type": "color",
+        "$value": "{CoolGray.700}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL"
+            ]
+          }
+        }
+      },
+      "Heavy": {
+        "$type": "color",
+        "$value": "{CoolGray.900}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL"
+            ]
+          }
+        }
+      },
+      "Inverse": {
+        "$type": "color",
+        "$value": "{Common.0}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL"
+            ]
+          }
+        }
+      },
+      "Weak": {
+        "$type": "color",
+        "$value": "{CoolGray.300}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL"
+            ]
+          }
+        }
+      }
+    },
+    "Fill": {
+      "Base": {
+        "$type": "color",
+        "$value": "{Common.0}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "EFFECT_COLOR"
+            ]
+          }
+        }
+      },
+      "Weak": {
+        "$type": "color",
+        "$value": "{CoolGray.50}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "EFFECT_COLOR"
+            ]
+          }
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "{CoolGray.100}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "EFFECT_COLOR"
+            ]
+          }
+        }
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{CoolGray.400}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "EFFECT_COLOR"
+            ]
+          }
+        }
+      },
+      "Heavy": {
+        "$type": "color",
+        "$value": "{CoolGray.900}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "EFFECT_COLOR"
+            ]
+          }
+        }
+      },
+      "Normal": {
+        "$type": "color",
+        "$value": "{CoolGray.200}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "EFFECT_COLOR"
+            ]
+          }
+        }
+      }
+    },
+    "Border": {
+      "Weak": {
+        "$type": "color",
+        "$value": "{CoolGray.100}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Light": {
+        "$type": "color",
+        "$value": "{CoolGray.200}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Normal": {
+        "$type": "color",
+        "$value": "{CoolGray.300}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Heavy": {
+        "$type": "color",
+        "$value": "{CoolGray.900}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Inverse": {
+        "$type": "color",
+        "$value": "{Common.0}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      }
+    },
+    "Status": {
+      "Positive": {
+        "$type": "color",
+        "$value": "{Green.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Informative": {
+        "$type": "color",
+        "$value": "{Blue.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Caution": {
+        "$type": "color",
+        "$value": "{Yellow.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Warning": {
+        "$type": "color",
+        "$value": "{Orange.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      },
+      "Negative": {
+        "$type": "color",
+        "$value": "{Red.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      }
+    },
+    "Disabled": {
+      "Fill": {
+        "Normal": {
+          "$type": "color",
+          "$value": "{CoolGray.100}",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ]
+            }
+          }
+        }
+      },
+      "Label": {
+        "Normal": {
+          "$type": "color",
+          "$value": "{CoolGray.300}",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ]
+            }
+          }
+        },
+        "Strong": {
+          "$type": "color",
+          "$value": "{CoolGray.400}",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "Overlay": {
+      "Normal": {
+        "$type": "color",
+        "$value": "#0000004d",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ]
+          }
+        }
+      }
+    },
+    "Accent": {
+      "Red": {
+        "$type": "color",
+        "$value": "{Red.500}",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Component/Mode 1": {
+    "Typography": {
+      "Font Family": {
+        "Pretendard": {
+          "$type": "fontFamily",
+          "$value": "Pretendard",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_FAMILY"
+              ]
+            }
+          }
+        }
+      },
+      "Weight": {
+        "Regular": {
+          "$type": "number",
+          "$value": 400,
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_WEIGHT"
+              ]
+            }
+          }
+        },
+        "Medium": {
+          "$type": "number",
+          "$value": 500,
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_WEIGHT"
+              ]
+            }
+          }
+        },
+        "Semibold": {
+          "$type": "number",
+          "$value": 600,
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_WEIGHT"
+              ]
+            }
+          }
+        },
+        "Bold": {
+          "$type": "number",
+          "$value": 700,
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_WEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "Size": {
+        "Size-1": {
+          "$type": "dimension",
+          "$value": "10px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-2": {
+          "$type": "dimension",
+          "$value": "11px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-14": {
+          "$type": "dimension",
+          "$value": "36px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-13": {
+          "$type": "dimension",
+          "$value": "32px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-12": {
+          "$type": "dimension",
+          "$value": "28px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-11": {
+          "$type": "dimension",
+          "$value": "24px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-10": {
+          "$type": "dimension",
+          "$value": "22px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-9": {
+          "$type": "dimension",
+          "$value": "20px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-8": {
+          "$type": "dimension",
+          "$value": "18px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-7": {
+          "$type": "dimension",
+          "$value": "17px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-6": {
+          "$type": "dimension",
+          "$value": "16px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-5": {
+          "$type": "dimension",
+          "$value": "14px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-4": {
+          "$type": "dimension",
+          "$value": "13px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        },
+        "Size-3": {
+          "$type": "dimension",
+          "$value": "12px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "FONT_SIZE"
+              ]
+            }
+          }
+        }
+      },
+      "Line Height": {
+        "Leading-5": {
+          "$type": "dimension",
+          "$value": "24px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-4": {
+          "$type": "dimension",
+          "$value": "20px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-3": {
+          "$type": "dimension",
+          "$value": "18px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-2": {
+          "$type": "dimension",
+          "$value": "16px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-1": {
+          "$type": "dimension",
+          "$value": "14px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-6": {
+          "$type": "dimension",
+          "$value": "26px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-7": {
+          "$type": "dimension",
+          "$value": "28px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-8": {
+          "$type": "dimension",
+          "$value": "30px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-12": {
+          "$type": "dimension",
+          "$value": "48px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-11": {
+          "$type": "dimension",
+          "$value": "44px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-10": {
+          "$type": "dimension",
+          "$value": "38px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "Leading-9": {
+          "$type": "dimension",
+          "$value": "34px",
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "variable",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "Radius": {
+      "0": {
+        "$type": "dimension",
+        "$value": "0px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "50": {
+        "$type": "dimension",
+        "$value": "4px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "75": {
+        "$type": "dimension",
+        "$value": "6px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "100": {
+        "$type": "dimension",
+        "$value": "8px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "150": {
+        "$type": "dimension",
+        "$value": "12px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "200": {
+        "$type": "dimension",
+        "$value": "16px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "250": {
+        "$type": "dimension",
+        "$value": "20px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "300": {
+        "$type": "dimension",
+        "$value": "24px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      },
+      "Full": {
+        "$type": "dimension",
+        "$value": "9999px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "CORNER_RADIUS"
+            ]
+          }
+        }
+      }
+    },
+    "Spacing": {
+      "0": {
+        "$type": "dimension",
+        "$value": "0px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "25": {
+        "$type": "dimension",
+        "$value": "2px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "50": {
+        "$type": "dimension",
+        "$value": "4px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "75": {
+        "$type": "dimension",
+        "$value": "6px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "100": {
+        "$type": "dimension",
+        "$value": "8px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "125": {
+        "$type": "dimension",
+        "$value": "10px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "150": {
+        "$type": "dimension",
+        "$value": "12px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "200": {
+        "$type": "dimension",
+        "$value": "16px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "250": {
+        "$type": "dimension",
+        "$value": "20px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "300": {
+        "$type": "dimension",
+        "$value": "24px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "400": {
+        "$type": "dimension",
+        "$value": "32px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "500": {
+        "$type": "dimension",
+        "$value": "40px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "600": {
+        "$type": "dimension",
+        "$value": "48px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "700": {
+        "$type": "dimension",
+        "$value": "56px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "800": {
+        "$type": "dimension",
+        "$value": "64px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "1000": {
+        "$type": "dimension",
+        "$value": "80px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      },
+      "1250": {
+        "$type": "dimension",
+        "$value": "100px",
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "variable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      }
+    },
+    "Display": {
+      "L": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-14}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-12}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "M": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-13}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-11}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      }
+    },
+    "Headline": {
+      "L": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-12}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-10}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "M": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-11}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-9}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-11}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-9}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      }
+    },
+    "Title": {
+      "L": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-10}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-8}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "M": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-9}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-7}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "S": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-8}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-6}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-8}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-6}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Regular": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-8}",
+            "fontWeight": "{Typography.Weight.Regular}",
+            "lineHeight": "{Typography.Line Height.Leading-6}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      }
+    },
+    "Body": {
+      "L": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-7}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-7}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Medium": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-7}",
+            "fontWeight": "{Typography.Weight.Medium}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Regular": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-7}",
+            "fontWeight": "{Typography.Weight.Regular}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "M": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-6}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-6}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Medium": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-6}",
+            "fontWeight": "{Typography.Weight.Medium}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Regular": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-6}",
+            "fontWeight": "{Typography.Weight.Regular}",
+            "lineHeight": "{Typography.Line Height.Leading-5}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "S": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-5}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-5}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Medium": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-5}",
+            "fontWeight": "{Typography.Weight.Medium}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Regular": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-5}",
+            "fontWeight": "{Typography.Weight.Regular}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "XS": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-4}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-4}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Medium": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-4}",
+            "fontWeight": "{Typography.Weight.Medium}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Regular": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-4}",
+            "fontWeight": "{Typography.Weight.Regular}",
+            "lineHeight": "{Typography.Line Height.Leading-4}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      }
+    },
+    "Caption": {
+      "L": {
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-3}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-3}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Medium": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-3}",
+            "fontWeight": "{Typography.Weight.Medium}",
+            "lineHeight": "{Typography.Line Height.Leading-3}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Regular": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-3}",
+            "fontWeight": "{Typography.Weight.Regular}",
+            "lineHeight": "{Typography.Line Height.Leading-3}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      },
+      "M": {
+        "Semibold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-2}",
+            "fontWeight": "{Typography.Weight.Semibold}",
+            "lineHeight": "{Typography.Line Height.Leading-2}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Medium": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-2}",
+            "fontWeight": "{Typography.Weight.Medium}",
+            "lineHeight": "{Typography.Line Height.Leading-2}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        },
+        "Regular": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-2}",
+            "fontWeight": "{Typography.Weight.Regular}",
+            "lineHeight": "{Typography.Line Height.Leading-2}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      }
+    },
+    "Label": {
+      "M": {
+        "Bold": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "{Typography.Font Family.Pretendard}",
+            "fontSize": "{Typography.Size.Size-1}",
+            "fontWeight": "{Typography.Weight.Bold}",
+            "lineHeight": "{Typography.Line Height.Leading-1}",
+            "letterSpacing": "-1%",
+            "textDecoration": "none"
+          },
+          "$extensions": {
+            "com.huray.token-export": {
+              "source": "textStyle"
+            }
+          }
+        }
+      }
+    }
+  },
+  "Styles/Default": {
+    "Elevation": {
+      "Xsmall": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "#0000001a",
+            "offsetX": "0px",
+            "offsetY": "1px",
+            "blur": "2px",
+            "spread": "0px",
+            "inset": false
+          }
+        ],
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "effectStyle"
+          }
+        }
+      },
+      "Small": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "#0000000d",
+            "offsetX": "0px",
+            "offsetY": "10px",
+            "blur": "15px",
+            "spread": "-3px",
+            "inset": false
+          },
+          {
+            "color": "#00000008",
+            "offsetX": "0px",
+            "offsetY": "4px",
+            "blur": "6px",
+            "spread": "-2px",
+            "inset": false
+          }
+        ],
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "effectStyle"
+          }
+        }
+      },
+      "Medium": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "#0000000f",
+            "offsetX": "0px",
+            "offsetY": "16px",
+            "blur": "24px",
+            "spread": "-6px",
+            "inset": false
+          },
+          {
+            "color": "#0000000a",
+            "offsetX": "0px",
+            "offsetY": "8px",
+            "blur": "12px",
+            "spread": "-4px",
+            "inset": false
+          }
+        ],
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "effectStyle"
+          }
+        }
+      },
+      "Large": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "#00000012",
+            "offsetX": "0px",
+            "offsetY": "28px",
+            "blur": "40px",
+            "spread": "-10px",
+            "inset": false
+          },
+          {
+            "color": "#0000000d",
+            "offsetX": "0px",
+            "offsetY": "10px",
+            "blur": "15px",
+            "spread": "-5px",
+            "inset": false
+          }
+        ],
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "effectStyle"
+          }
+        }
+      },
+      "Xlarge": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "#00000014",
+            "offsetX": "0px",
+            "offsetY": "36px",
+            "blur": "56px",
+            "spread": "-10px",
+            "inset": false
+          },
+          {
+            "color": "#0000000a",
+            "offsetX": "0px",
+            "offsetY": "15px",
+            "blur": "25px",
+            "spread": "-5px",
+            "inset": false
+          }
+        ],
+        "$extensions": {
+          "com.huray.token-export": {
+            "source": "effectStyle"
+          }
+        }
+      }
+    }
+  }
+}

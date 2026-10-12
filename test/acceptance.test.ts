@@ -1,23 +1,77 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { transform } from '../src/transform';
 
-function load(name: string) {
-  return JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8'));
+const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, import.meta.url), 'utf8'));
+const META = 'com.huray.token-export';
+
+// 형식 2에서 새로 붙은 것(메타·textDecoration·그림자 묶음)을 걷어 형식 1과 비교할 수 있게 한다.
+function stripV2(root: any): any {
+  const { ['Styles/Default']: _shadows, ...rest } = root;
+  return strip(rest);
+}
+function strip(node: any): any {
+  if (Array.isArray(node) || node == null || typeof node !== 'object') return node;
+  const out: any = {};
+  for (const [k, val] of Object.entries(node)) {
+    if (k === '$extensions') continue;
+    out[k] = strip(val);
+  }
+  if (out.$type === 'typography') delete out.$value.textDecoration;
+  return out;
 }
 
-const hasFixture = existsSync(new URL('./fixtures/figma-raw.json', import.meta.url));
+describe('합격 — v0.2', () => {
+  const out = transform(load('v0.2.figma-raw.json'));
 
-// 회귀 스냅샷: expected-tokens.json = 검증된 시점의 transform(figma-raw) 출력.
-// (정답 기준은 'theme.css 변환이 잘 되는가'. 그건 huray-design-web의 tokensToCss로
-//  한 번 검증함 — 구조 100% 일치, Effect/Mode 1 'Over contents' 복원 확인.
-//  이 테스트는 이후 transform 코드가 출력을 바꾸지 않는지 지키는 회귀 가드.)
-// figma-raw.json 없으면 skip. Figma 토큰이 바뀌면 baseline을 다시 캡처해 갱신한다.
-describe.skipIf(!hasFixture)('회귀 — transform(figma-raw) 출력 고정', () => {
-  it('transform(figma-raw) === 캡처된 baseline(expected-tokens.json)', () => {
-    const raw = load('figma-raw.json');
-    const expected = load('expected-tokens.json');
-    const out = transform(raw);
-    expect(out).toEqual(expected);
+  it('그림자 3개가 스타일 이름으로 (안쪽 그림자는 Inner Shadow — 의도된 이름 변경)', () => {
+    expect(Object.keys((out as any)['Styles/Default']).sort()).toEqual(['Button hover', 'Elevate', 'Inner Shadow']);
+  });
+
+  it('메타·밑줄·그림자 묶음을 걷으면 허브 v0.2(형식 1)와 같다', () => {
+    expect(stripV2(out)).toEqual(load('hub-v0.2.tokens.json'));
+  });
+
+  it('출력 고정본과 같다', () => {
+    expect(out).toEqual(load('v0.2.tokens.json'));
+  });
+});
+
+describe('합격 — v0.3', () => {
+  const out = transform(load('v0.3.figma-raw.json')) as any;
+
+  it('텍스트 스타일 33개가 전부 타이포 토큰이 된다', () => {
+    expect(out.$extensions[META].counts.typography).toBe(33);
+  });
+
+  it('Body/M/Bold 와 Body/M/Regular 가 공존하고 자간 -1%', () => {
+    const body = out['Component/Mode 1'].Body.M;
+    expect(Object.keys(body).sort()).toEqual(['Bold', 'Medium', 'Regular', 'Semibold']);
+    expect(body.Bold.$value.letterSpacing).toBe('-1%');
+    expect(body.Bold.$value.fontWeight).toBe('{Typography.Weight.Bold}');
+  });
+
+  it('그림자 5단계 (Elevation)', () => {
+    expect(out.$extensions[META].counts.shadow).toBe(5);
+    expect(Object.keys(out['Styles/Default'].Elevation)).toHaveLength(5);
+  });
+
+  it('모든 변수 잎에 scopes 가 있다', () => {
+    const leaves: any[] = [];
+    const walk = (n: any) => {
+      for (const [k, v] of Object.entries(n)) {
+        if (k.startsWith('$')) continue;
+        if ((v as any).$value !== undefined) leaves.push(v);
+        else walk(v);
+      }
+    };
+    for (const [k, set] of Object.entries(out)) if (!k.startsWith('$')) walk(set);
+    const vars = leaves.filter((l) => l.$extensions[META].source === 'variable');
+    expect(vars.length).toBeGreaterThan(0);
+    expect(vars.every((l) => Array.isArray(l.$extensions[META].scopes))).toBe(true);
+  });
+
+  it('출력 고정본과 같다', () => {
+    expect(out).toEqual(load('v0.3.tokens.json'));
   });
 });
