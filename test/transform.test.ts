@@ -28,7 +28,14 @@ describe('dtcgTypeOf — scope로 DTCG $type 판정', () => {
 
 // 테스트 fixture 빌더 — scopes/hidden 기본값 채움.
 function fig(partial: Partial<SerializedFigma>): SerializedFigma {
-  return { collections: [], variables: [], textStyles: [], ...partial };
+  return {
+    collections: [],
+    variables: [],
+    textStyles: [],
+    effectStyles: [],
+    skipped: { paintStyles: 0, gridStyles: 0, effects: {} },
+    ...partial,
+  };
 }
 function v(p: Partial<SerializedVariable> & Pick<SerializedVariable, 'id' | 'name' | 'collectionId' | 'resolvedType'>): SerializedVariable {
   return { valuesByMode: {}, scopes: ['ALL_SCOPES'], hiddenFromPublishing: false, ...p };

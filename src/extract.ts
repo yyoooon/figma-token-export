@@ -1,5 +1,7 @@
 import type {
+  SerializedEffectStyle,
   SerializedFigma,
+  SerializedShadowLayer,
   SerializedTextStyle,
   SerializedValue,
   SerializedVariable,
@@ -23,6 +25,7 @@ function toValue(raw: unknown): SerializedValue {
 }
 
 const TYPO_PROPS = ['fontFamily', 'fontWeight', 'fontSize', 'lineHeight', 'letterSpacing'] as const;
+const SHADOW_PROPS = ['color', 'offsetX', 'offsetY', 'radius', 'spread'] as const;
 
 export async function extractFigma(): Promise<SerializedFigma> {
   const colls = await figma.variables.getLocalVariableCollectionsAsync();
@@ -57,8 +60,58 @@ export async function extractFigma(): Promise<SerializedFigma> {
     for (const prop of TYPO_PROPS) {
       if (raw[prop]?.id) bound[prop] = raw[prop].id;
     }
-    return { name: s.name, boundVariables: bound };
+    const lh = s.lineHeight as { unit: 'PIXELS' | 'PERCENT' | 'AUTO'; value?: number };
+    const ls = s.letterSpacing as { unit: 'PIXELS' | 'PERCENT'; value: number };
+    return {
+      name: s.name,
+      boundVariables: bound,
+      values: {
+        fontFamily: s.fontName.family,
+        fontStyle: s.fontName.style,
+        fontSize: s.fontSize as number,
+        lineHeight: lh.unit === 'AUTO' ? { unit: 'AUTO' } : { unit: lh.unit, value: lh.value },
+        letterSpacing: { unit: ls.unit, value: ls.value },
+        textDecoration: s.textDecoration as SerializedTextStyle['values']['textDecoration'],
+      },
+    };
   });
 
-  return { collections, variables, textStyles };
+  const effectStylesRaw = await figma.getLocalEffectStylesAsync();
+  const paintStyles = await figma.getLocalPaintStylesAsync();
+  const gridStyles = await figma.getLocalGridStylesAsync();
+  const skippedEffects: Record<string, number> = {};
+
+  const effectStyles: SerializedEffectStyle[] = effectStylesRaw.map((s) => {
+    const shadows: SerializedShadowLayer[] = [];
+    const otherEffects: string[] = [];
+    for (const e of s.effects) {
+      if (e.type === 'DROP_SHADOW' || e.type === 'INNER_SHADOW') {
+        const raw = ((e as { boundVariables?: unknown }).boundVariables ?? {}) as Record<string, { id: string }>;
+        const bound: SerializedShadowLayer['boundVariables'] = {};
+        for (const prop of SHADOW_PROPS) if (raw[prop]?.id) bound[prop] = raw[prop].id;
+        shadows.push({
+          inset: e.type === 'INNER_SHADOW',
+          visible: e.visible,
+          color: { r: e.color.r, g: e.color.g, b: e.color.b, a: e.color.a },
+          offsetX: e.offset.x,
+          offsetY: e.offset.y,
+          blur: e.radius,
+          spread: e.spread ?? 0,
+          boundVariables: bound,
+        });
+      } else {
+        otherEffects.push(e.type);
+        skippedEffects[e.type] = (skippedEffects[e.type] ?? 0) + 1;
+      }
+    }
+    return { name: s.name, shadows, otherEffects };
+  });
+
+  return {
+    collections,
+    variables,
+    textStyles,
+    effectStyles,
+    skipped: { paintStyles: paintStyles.length, gridStyles: gridStyles.length, effects: skippedEffects },
+  };
 }

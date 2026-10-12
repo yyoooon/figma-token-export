@@ -29,23 +29,53 @@ export interface SerializedCollection {
   modes: SerializedMode[];
 }
 
-// 타이포 텍스트 스타일. 각 속성은 바인딩된 변수 id(있으면) — transform이 ref로 복원.
+export interface SerializedTextStyleValues {
+  fontFamily: string;
+  fontStyle: string; // 'Bold', 'SemiBold' — 굵기 미연결 시 숫자로 바꿀 근거
+  fontSize: number;
+  lineHeight: { unit: 'PIXELS' | 'PERCENT' | 'AUTO'; value?: number };
+  letterSpacing: { unit: 'PIXELS' | 'PERCENT'; value: number };
+  textDecoration: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
+}
+
+// 타이포 텍스트 스타일. 연결된 속성은 변수 id, 모든 속성의 실제 값은 values 에.
+// (자간 % 처럼 피그마 변수로 못 만드는 값은 스타일에만 있다 — values 가 그 출처)
 export interface SerializedTextStyle {
-  name: string; // 'Display/lg-bold'
+  name: string; // 'Body/M/Bold'
   boundVariables: Partial<
     Record<
       'fontFamily' | 'fontWeight' | 'fontSize' | 'lineHeight' | 'letterSpacing',
       string // 변수 id
     >
   >;
+  values: SerializedTextStyleValues;
 }
 
-// 그림자(이펙트)는 'Effect' 변수 컬렉션의 변수로 들어오므로 별도 타입이 필요 없다.
+export interface SerializedShadowLayer {
+  inset: boolean;
+  visible: boolean;
+  color: { r: number; g: number; b: number; a: number };
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  spread: number;
+  boundVariables: Partial<Record<'color' | 'offsetX' | 'offsetY' | 'radius' | 'spread', string>>;
+}
+
+// 이펙트 스타일. 그림자 겹만 토큰이 된다 — 흐림 등 그 밖의 효과는 종류 이름만 남겨 개수를 알린다.
+export interface SerializedEffectStyle {
+  name: string; // 'Elevation/Xsmall'
+  shadows: SerializedShadowLayer[];
+  otherEffects: string[]; // ['LAYER_BLUR']
+}
 
 export interface SerializedFigma {
   collections: SerializedCollection[];
   variables: SerializedVariable[];
   textStyles: SerializedTextStyle[];
+  effectStyles: SerializedEffectStyle[];
+  // 내보내지 않는 것 — 조용히 버리지 않고 개수를 알린다.
+  skipped: { paintStyles: number; gridStyles: number; effects: Record<string, number> };
 }
 
 // ── 출력(tokens.json) 쪽 ──

@@ -1,6 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import { extractFigma } from '../src/extract';
 
+// 텍스트 외 스타일 API 목 — 없으면 빈 목록.
+function noOtherStyles() {
+  return {
+    getLocalEffectStylesAsync: vi.fn().mockResolvedValue([]),
+    getLocalPaintStylesAsync: vi.fn().mockResolvedValue([]),
+    getLocalGridStylesAsync: vi.fn().mockResolvedValue([]),
+  };
+}
+
 describe('extractFigma', () => {
   it('serializes collections, variables (alias+color+scopes), text styles', async () => {
     (globalThis as any).figma = {
@@ -36,8 +45,14 @@ describe('extractFigma', () => {
             fontSize: { type: 'VARIABLE_ALIAS', id: 'v1' },
             fontFamily: { type: 'VARIABLE_ALIAS', id: 'v2' },
           },
+          fontName: { family: 'Pretendard', style: 'Bold' },
+          fontSize: 36,
+          lineHeight: { unit: 'PIXELS', value: 48 },
+          letterSpacing: { unit: 'PIXELS', value: -0.2 },
+          textDecoration: 'NONE',
         },
       ]),
+      ...noOtherStyles(),
     };
 
     const out = await extractFigma();
@@ -66,6 +81,7 @@ describe('extractFigma', () => {
         ]),
       },
       getLocalTextStylesAsync: vi.fn().mockResolvedValue([]),
+      ...noOtherStyles(),
     };
 
     const out = await extractFigma();
@@ -74,5 +90,88 @@ describe('extractFigma', () => {
       color: { kind: 'ALIAS', id: 'v1' },
       opacity: { kind: 'FLOAT', value: 30 },
     });
+  });
+
+  it('텍스트 스타일의 실제 값(미연결 자간 포함)을 읽는다', async () => {
+    (globalThis as any).figma = {
+      variables: {
+        getLocalVariableCollectionsAsync: vi.fn().mockResolvedValue([]),
+        getLocalVariablesAsync: vi.fn().mockResolvedValue([]),
+      },
+      getLocalTextStylesAsync: vi.fn().mockResolvedValue([
+        {
+          name: 'Body/M/Bold',
+          boundVariables: { fontSize: { id: 'v9' } },
+          fontName: { family: 'Pretendard', style: 'Bold' },
+          fontSize: 16,
+          lineHeight: { unit: 'PIXELS', value: 24 },
+          letterSpacing: { unit: 'PERCENT', value: -1 },
+          textDecoration: 'NONE',
+        },
+      ]),
+      ...noOtherStyles(),
+    };
+    const out = await extractFigma();
+    expect(out.textStyles[0]).toEqual({
+      name: 'Body/M/Bold',
+      boundVariables: { fontSize: 'v9' },
+      values: {
+        fontFamily: 'Pretendard',
+        fontStyle: 'Bold',
+        fontSize: 16,
+        lineHeight: { unit: 'PIXELS', value: 24 },
+        letterSpacing: { unit: 'PERCENT', value: -1 },
+        textDecoration: 'NONE',
+      },
+    });
+  });
+
+  it('이펙트 스타일의 그림자 겹과 연결 변수, 건너뛸 스타일 개수를 읽는다', async () => {
+    (globalThis as any).figma = {
+      variables: {
+        getLocalVariableCollectionsAsync: vi.fn().mockResolvedValue([]),
+        getLocalVariablesAsync: vi.fn().mockResolvedValue([]),
+      },
+      getLocalTextStylesAsync: vi.fn().mockResolvedValue([]),
+      getLocalPaintStylesAsync: vi.fn().mockResolvedValue([{ name: 'Guide/Red' }, { name: 'Guide/Blue' }]),
+      getLocalGridStylesAsync: vi.fn().mockResolvedValue([{ name: 'Icon drawing guide' }]),
+      getLocalEffectStylesAsync: vi.fn().mockResolvedValue([
+        {
+          name: 'Elevation/Xsmall',
+          effects: [
+            {
+              type: 'DROP_SHADOW',
+              visible: true,
+              color: { r: 0, g: 0, b: 0, a: 0.1 },
+              offset: { x: 0, y: 1 },
+              radius: 2,
+              spread: 0,
+              boundVariables: { color: { id: 'vc' } },
+            },
+            { type: 'LAYER_BLUR', visible: true, radius: 4 },
+          ],
+        },
+      ]),
+    };
+    const out = await extractFigma();
+    expect(out.effectStyles).toEqual([
+      {
+        name: 'Elevation/Xsmall',
+        shadows: [
+          {
+            inset: false,
+            visible: true,
+            color: { r: 0, g: 0, b: 0, a: 0.1 },
+            offsetX: 0,
+            offsetY: 1,
+            blur: 2,
+            spread: 0,
+            boundVariables: { color: 'vc' },
+          },
+        ],
+        otherEffects: ['LAYER_BLUR'],
+      },
+    ]);
+    expect(out.skipped).toEqual({ paintStyles: 2, gridStyles: 1, effects: { LAYER_BLUR: 1 } });
   });
 });
