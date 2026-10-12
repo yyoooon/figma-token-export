@@ -15,11 +15,16 @@ figma.ui.onmessage = async (msg: UIMessage) => {
   }
   if (msg.type === 'load-settings') {
     const settings = await figma.clientStorage.getAsync('settings');
-    figma.ui.postMessage({ type: 'settings', settings: settings ?? {} });
+    // 파일 이름을 프로젝트 이름 기본값으로 함께 전달(UI에서 항상 덮어씀).
+    figma.ui.postMessage({ type: 'settings', settings: settings ?? {}, fileName: figma.root.name });
     return;
   }
   if (msg.type === 'save-settings') {
     await figma.clientStorage.setAsync('settings', msg.settings);
+    return;
+  }
+  if (msg.type === 'get-filename') {
+    figma.ui.postMessage({ type: 'filename', fileName: figma.root.name });
     return;
   }
   if (msg.type === 'export') {

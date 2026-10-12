@@ -10,8 +10,90 @@ const post = (type: string, extra: Record<string, unknown> = {}) =>
 // branch/path 는 project 에서 파생하므로 저장 대상이 아니다.
 // pat 은 편의상 저장하지만 clientStorage 평문 — 공유 PC 주의.
 const SETTING_IDS = ['owner', 'repo', 'project', 'pat'] as const;
+// 최근 입력값을 자동완성으로 보여줄 필드 — PAT는 비밀번호라 제외.
+const HISTORY_IDS = ['owner', 'repo', 'project'] as const;
+const HISTORY_MAX = 5;
+// 필드별 최근 입력값(최신순·중복 제거·최대 5개). settings 안에 함께 저장된다.
+let history: Record<string, string[]> = { owner: [], repo: [], project: [] };
 // export 결과를 어디로 보낼지 — 다운로드(Export 버튼) vs 푸시(Push 버튼).
 let pendingIntent: 'download' | 'push' = 'download';
+
+// 현재 입력값을 해당 필드 히스토리 맨 앞에 넣는다(중복 제거·상한 적용).
+function pushHistory(id: string, value: string): void {
+  const v = value.trim();
+  if (!v) return;
+  history[id] = [v, ...(history[id] ?? []).filter((x) => x !== v)].slice(0, HISTORY_MAX);
+}
+// 검색창식 자동완성: 포커스하면 최근값 전체, 타이핑하면 부분일치 필터링.
+function attachAutocomplete(id: string, onSelect?: () => void): void {
+  const input = $(id);
+  const menu = document.getElementById(`${id}-menu`) as HTMLElement;
+  let active = -1;
+  // 포커스 직후엔 전체 이력, 사용자가 타이핑하면 입력값으로 필터링(검색창식).
+  let showAll = false;
+
+  const matches = (): string[] => {
+    const all = history[id] ?? [];
+    if (showAll) return all;
+    const q = input.value.trim().toLowerCase();
+    return q ? all.filter((v) => v.toLowerCase().includes(q)) : all;
+  };
+  const close = (): void => {
+    menu.classList.remove('open');
+    active = -1;
+  };
+  const choose = (v: string): void => {
+    input.value = v;
+    close();
+    onSelect?.();
+  };
+  const render = (): void => {
+    const list = matches();
+    if (!list.length) return close();
+    menu.innerHTML = '';
+    list.forEach((v, i) => {
+      const el = document.createElement('div');
+      el.className = 'ac-item' + (i === active ? ' active' : '');
+      el.textContent = v;
+      // mousedown: input blur 보다 먼저 실행돼야 선택이 먹는다.
+      el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        choose(v);
+      });
+      menu.appendChild(el);
+    });
+    menu.classList.add('open');
+  };
+
+  input.addEventListener('focus', () => {
+    showAll = true;
+    render();
+  });
+  input.addEventListener('input', () => {
+    showAll = false;
+    active = -1;
+    render();
+  });
+  input.addEventListener('blur', () => setTimeout(close, 120));
+  input.addEventListener('keydown', (e) => {
+    if (!menu.classList.contains('open')) return;
+    const list = matches();
+    if (e.key === 'ArrowDown') {
+      active = Math.min(active + 1, list.length - 1);
+      render();
+      e.preventDefault();
+    } else if (e.key === 'ArrowUp') {
+      active = Math.max(active - 1, 0);
+      render();
+      e.preventDefault();
+    } else if (e.key === 'Enter' && active >= 0) {
+      choose(list[active]);
+      e.preventDefault();
+    } else if (e.key === 'Escape') {
+      close();
+    }
+  });
+}
 
 // YYYYMMDD (하루 1 브랜치 — 같은 날 재푸시는 같은 브랜치를 재사용·갱신)
 function dateStamp(): string {
@@ -20,17 +102,24 @@ function dateStamp(): string {
   return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}`;
 }
 
-// project → branch/path 파생. 허브 관례: {project}/tokens.json.
+// Figma 파일 이름 → 프로젝트/branch/path 에 안전한 형태(공백→하이픈, git 금지문자 제거).
+function slugifyProject(name: string): string {
+  return name.trim().replace(/\s+/g, '-').replace(/[/\\~^:?*[\]]/g, '');
+}
+
+// project → branch/path 파생: {project}/tokens.json.
 function deriveBranch(project: string): string {
   return project ? `fix/${project}-token-${dateStamp()}` : '';
 }
 function derivePath(project: string): string {
   return project ? `${project}/tokens.json` : 'tokens.json';
 }
+// 사용자가 branch/path 를 직접 수정하면 그 값을 유지하고 자동 파생을 멈춘다.
+const dirty = { branch: false, path: false };
 function refreshDerived(): void {
   const project = $('project').value.trim();
-  $('branch').value = deriveBranch(project);
-  $('path').value = derivePath(project);
+  if (!dirty.branch) $('branch').value = deriveBranch(project);
+  if (!dirty.path) $('path').value = derivePath(project);
 }
 
 function download(name: string, data: unknown) {
@@ -45,7 +134,8 @@ function download(name: string, data: unknown) {
 }
 
 function saveSettings() {
-  const settings: Record<string, string> = {};
+  for (const id of HISTORY_IDS) pushHistory(id, $(id).value);
+  const settings: Record<string, unknown> = { history };
   for (const k of SETTING_IDS) settings[k] = $(k).value;
   post('save-settings', { settings });
 }
@@ -53,11 +143,26 @@ function saveSettings() {
 // 설정 복원
 post('load-settings');
 
+// owner/repo/project 최근값 자동완성 (project 선택 시 branch/path 파생 갱신)
+attachAutocomplete('owner');
+attachAutocomplete('repo');
+attachAutocomplete('project', refreshDerived);
+
 // 프로젝트 이름 입력 시 branch/path 자동 채움
 $('project').addEventListener('input', refreshDerived);
+// 현재 Figma 파일 이름을 프로젝트 이름으로 다시 가져오기 (파일 이동 후 수동 갱신)
+document.getElementById('pull-filename')?.addEventListener('click', () => post('get-filename'));
+// branch/path 직접 수정 감지 → 이후 자동 파생 중단
+$('branch').addEventListener('input', () => {
+  dirty.branch = true;
+});
+$('path').addEventListener('input', () => {
+  dirty.path = true;
+});
 
 document.getElementById('export')?.addEventListener('click', () => {
   pendingIntent = 'download';
+  saveSettings();
   post('export');
 });
 
@@ -94,6 +199,14 @@ onmessage = (e: MessageEvent) => {
   const msg = e.data.pluginMessage;
   if (msg?.type === 'settings') {
     for (const k of SETTING_IDS) if (msg.settings[k]) $(k).value = msg.settings[k];
+    if (msg.settings.history) history = { owner: [], repo: [], project: [], ...msg.settings.history };
+    // 프로젝트 이름은 열려있는 파일 이름으로 항상 덮어씀.
+    if (msg.fileName) $('project').value = slugifyProject(msg.fileName);
+    refreshDerived();
+  }
+  // "파일명 가져오기" 버튼 응답 — 현재 파일 이름으로 프로젝트 갱신.
+  if (msg?.type === 'filename' && msg.fileName) {
+    $('project').value = slugifyProject(msg.fileName);
     refreshDerived();
   }
   if (msg?.type === 'result') {
