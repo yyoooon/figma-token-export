@@ -233,6 +233,48 @@ export function buildTypographyTokens(figma: SerializedFigma): { path: string[];
   }));
 }
 
+// ── 그림자 (이펙트 스타일) ──
+// 그림자는 여러 값이 한 세트라 피그마 변수 하나에 못 담는다 → 이펙트 스타일이 정본.
+// (v0.2 는 그림자를 변수로도 쪼개 두었지만, v0.3 은 스타일만 있다. 스타일 하나로 통일)
+
+const SHADOW_FIELDS = [
+  ['offsetX', 'offsetX'],
+  ['offsetY', 'offsetY'],
+  ['blur', 'radius'],
+  ['spread', 'spread'],
+] as const; // [출력 필드, 피그마 boundVariables 키]
+
+export function buildShadowTokens(figma: SerializedFigma): { path: string[]; leaf: TokenLeaf }[] {
+  const names = nameById(figma);
+  const ref = (style: string, id: string) => {
+    const target = names.get(id);
+    if (!target)
+      throw new Error(`'${style}' 이펙트 스타일이 지금 없는 변수를 사용하고 있어요. 연결된 변수를 확인해 주세요.`);
+    return varNameToRef(target);
+  };
+  const out: { path: string[]; leaf: TokenLeaf }[] = [];
+  for (const style of figma.effectStyles) {
+    const layers = style.shadows.filter((l) => l.visible);
+    if (!layers.length) continue;
+    const $value = layers.map((l) => {
+      const layer: Record<string, string | boolean> = {
+        color: l.boundVariables.color ? ref(style.name, l.boundVariables.color) : rgbaToHex(l.color),
+      };
+      for (const [field, key] of SHADOW_FIELDS) {
+        const id = l.boundVariables[key];
+        layer[field] = id ? ref(style.name, id) : `${round(l[field])}px`;
+      }
+      layer.inset = l.inset;
+      return layer;
+    });
+    out.push({
+      path: figmaNameToPath(style.name),
+      leaf: { $type: 'shadow', $value, $extensions: { [META]: { source: 'effectStyle' } } },
+    });
+  }
+  return out;
+}
+
 // ── 전체 조립 (Task 6) ──
 
 // 합성 타이포가 들어갈 세트 = fontSize로 바인딩된 변수의 컬렉션/모드.

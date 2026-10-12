@@ -5,6 +5,7 @@ import {
   varNameToRef,
   buildVariableSets,
   buildTypographyTokens,
+  buildShadowTokens,
   transform,
   dtcgTypeOf,
 } from '../src/transform';
@@ -212,6 +213,54 @@ describe('buildTypographyTokens — 형식 2', () => {
       }),
     );
     expect(t.leaf.$value).toMatchObject({ letterSpacing: '-0.2px' });
+  });
+});
+
+describe('buildShadowTokens', () => {
+  const colorVar = v({ id: 'vc', name: 'Color/Black Opacity/100', collectionId: 'c', resolvedType: 'COLOR' });
+  const layer = {
+    inset: false,
+    visible: true,
+    color: { r: 0, g: 0, b: 0, a: 0.1 },
+    offsetX: 0,
+    offsetY: 4,
+    blur: 16,
+    spread: 0,
+    boundVariables: {},
+  };
+
+  it('겹을 배열로, 연결 값은 별칭, 미연결 값은 px·hex', () => {
+    const [t] = buildShadowTokens(
+      fig({
+        variables: [colorVar],
+        effectStyles: [{ name: 'Elevation/Xsmall', shadows: [{ ...layer, boundVariables: { color: 'vc' } }], otherEffects: [] }],
+      }),
+    );
+    expect(t.path).toEqual(['Elevation', 'Xsmall']);
+    expect(t.leaf).toEqual({
+      $type: 'shadow',
+      $value: [{ color: '{Color.Black Opacity.100}', offsetX: '0px', offsetY: '4px', blur: '16px', spread: '0px', inset: false }],
+      $extensions: { 'com.huray.token-export': { source: 'effectStyle' } },
+    });
+  });
+
+  it('안쪽 그림자는 inset, 숨긴 겹은 뺀다', () => {
+    const [t] = buildShadowTokens(
+      fig({
+        effectStyles: [{ name: 'Inner Shadow', shadows: [{ ...layer, inset: true }, { ...layer, visible: false }], otherEffects: [] }],
+      }),
+    );
+    expect(t.leaf.$value).toEqual([{ color: '#0000001a', offsetX: '0px', offsetY: '4px', blur: '16px', spread: '0px', inset: true }]);
+  });
+
+  it('그림자 겹이 없는 스타일(흐림만)은 토큰을 만들지 않는다', () => {
+    expect(buildShadowTokens(fig({ effectStyles: [{ name: 'Blur/Bg', shadows: [], otherEffects: ['BACKGROUND_BLUR'] }] }))).toEqual([]);
+  });
+
+  it('연결 변수가 없으면 예외', () => {
+    expect(() =>
+      buildShadowTokens(fig({ effectStyles: [{ name: 'E', shadows: [{ ...layer, boundVariables: { radius: 'nope' } }], otherEffects: [] }] })),
+    ).toThrow(/'E'/);
   });
 });
 
