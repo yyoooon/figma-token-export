@@ -43,17 +43,51 @@ export function diffTokens(
   return diff;
 }
 
-const MAX_ROWS = 80; // PR 본문 폭주 방지
+const MAX_ROWS = 80; // 본문에 바로 보이는 미리보기 줄 수
+const MAX_DETAILS = 2000; // 접기 안에 넣을 최대 줄 수 (GitHub PR 본문 65536자 제한 대비)
 
 function fmt(v: unknown): string {
-  return typeof v === 'object' ? JSON.stringify(v) : String(v);
+  return typeof v === 'object' && v !== null ? JSON.stringify(v) : String(v);
 }
 
+function isObj(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
+// 추가/삭제 항목: 값이 복합 객체(타이포 등)면 하위 키를 들여쓴 목록으로, 아니면 인라인.
+function renderValue(path: string, value: unknown): string {
+  if (!isObj(value)) return `- \`${path}\`: \`${fmt(value)}\``;
+  const sub = Object.entries(value)
+    .map(([k, val]) => `  - ${k}: \`${fmt(val)}\``)
+    .join('\n');
+  return `- \`${path}\`:\n${sub}`;
+}
+
+// 변경 항목: 둘 다 복합 객체면 실제로 달라진 하위 키만, 아니면 from → to.
+function renderChange(path: string, from: unknown, to: unknown): string {
+  if (!isObj(from) || !isObj(to)) return `- \`${path}\`: \`${fmt(from)}\` → \`${fmt(to)}\``;
+  const keys = [...new Set([...Object.keys(from), ...Object.keys(to)])];
+  const sub = keys
+    .filter((k) => JSON.stringify(from[k]) !== JSON.stringify(to[k]))
+    .map((k) => `  - ${k}: \`${fmt(from[k])}\` → \`${fmt(to[k])}\``)
+    .join('\n');
+  return `- \`${path}\`:\n${sub}`;
+}
+
+// 미리보기(MAX_ROWS)까지는 바로 노출, 나머지는 <details> 접기로 감싼다(GitHub 네이티브 더보기).
 function section(title: string, lines: string[]): string {
   if (!lines.length) return '';
+  const head = `\n### ${title} (${lines.length})\n`;
   const shown = lines.slice(0, MAX_ROWS);
-  const more = lines.length > MAX_ROWS ? `\n- …외 ${lines.length - MAX_ROWS}개` : '';
-  return `\n### ${title} (${lines.length})\n${shown.join('\n')}${more}\n`;
+  const rest = lines.slice(MAX_ROWS);
+  if (!rest.length) return `${head}${shown.join('\n')}\n`;
+
+  const detailRows = rest.slice(0, MAX_DETAILS);
+  const hidden = rest.length - detailRows.length;
+  const hiddenNote = hidden > 0 ? `\n- …외 ${hidden}개(전체는 tokens.json 참조)` : '';
+  // </summary> 뒤 빈 줄이 있어야 GitHub이 접힌 목록을 마크다운으로 렌더한다.
+  const details = `\n\n<details>\n<summary>나머지 ${rest.length}개 보기</summary>\n\n${detailRows.join('\n')}${hiddenNote}\n\n</details>\n`;
+  return `${head}${shown.join('\n')}${details}`;
 }
 
 export function formatPrBody(diff: TokenDiff, project: string): string {
@@ -64,9 +98,9 @@ export function formatPrBody(diff: TokenDiff, project: string): string {
   const head = `## 토큰 변경 요약 — \`${project}\`\n\n변경 ${changed.length} · 추가 ${added.length} · 삭제 ${removed.length}\n`;
   return [
     head,
-    section('변경', changed.map((d) => `- \`${d.path}\`: \`${fmt(d.from)}\` → \`${fmt(d.to)}\``)),
-    section('추가', added.map((d) => `- \`${d.path}\`: \`${fmt(d.value)}\``)),
-    section('삭제', removed.map((d) => `- \`${d.path}\`: \`${fmt(d.value)}\``)),
-    '\n— Huray Token Export 플러그인 자동 생성',
+    section('변경', changed.map((d) => renderChange(d.path, d.from, d.to))),
+    section('추가', added.map((d) => renderValue(d.path, d.value))),
+    section('삭제', removed.map((d) => renderValue(d.path, d.value))),
+    '\n— Design Token Export 플러그인 자동 생성',
   ].join('');
 }

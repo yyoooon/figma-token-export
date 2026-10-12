@@ -1,5 +1,5 @@
 import { buildPutBody, contentsUrl } from './github';
-import { diffTokens, formatPrBody } from './diff';
+import { diffTokens, formatPrBody, type TokenDiff } from './diff';
 
 // GitHub 푸시 오케스트레이션 — DOM/window 를 모른다(fetch 주입, 결과는 return).
 // UI(ui.ts)는 값 읽어 넘기고 결과 메시지만 화면에 표시한다. → 가짜 fetch 로 전 케이스 테스트 가능.
@@ -23,6 +23,12 @@ export interface PushResult {
 export interface PushDeps {
   fetch: typeof fetch;
   onStatus?: (s: string) => void; // 진행 상황(선택) — 테스트에선 생략
+}
+
+// diff 성격에 따라 커밋·PR 제목 구분: 순수 추가면 [추가], 수정·삭제가 섞이면 [수정].
+export function commitTitle(project: string, diff: TokenDiff): string {
+  const onlyAdded = diff.added.length > 0 && diff.changed.length === 0 && diff.removed.length === 0;
+  return onlyAdded ? `[추가] ${project} 토큰 추가` : `[수정] ${project} 토큰 갱신`;
 }
 
 // GitHub 응답 상태코드 → 비개발자도 이해할 안내 문구.
@@ -57,7 +63,6 @@ export async function pushTokens(cfg: PushConfig, deps: PushDeps): Promise<PushR
   const api = `https://api.github.com/repos/${owner}/${repo}`;
   const url = contentsUrl(owner, repo, path);
   const headers = { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github+json' };
-  const message = `[수정] ${project} 토큰 갱신`;
 
   try {
     onStatus('기본 브랜치 확인 중…');
@@ -85,6 +90,7 @@ export async function pushTokens(cfg: PushConfig, deps: PushDeps): Promise<PushR
     if (!diff.added.length && !diff.changed.length && !diff.removed.length) {
       return { ok: true, message: '변경 없음 — 푸시하지 않음 (허브와 동일)' };
     }
+    const message = commitTitle(project, diff); // 커밋·PR 제목 (추가/갱신 구분)
     const prBody = formatPrBody(diff, project);
 
     // 브랜치를 base 최신 커밋에 맞춘다.
