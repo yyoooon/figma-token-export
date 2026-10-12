@@ -39,22 +39,38 @@ Dev Mode에서는 Inspect 패널 하단 **Plugins** 메뉴에서 실행.
   - owner/repo/프로젝트 이름/PAT 모두 `figma.clientStorage`에 로컬 저장돼 다음 실행 때 복원된다.
     (PAT는 평문 저장 — **공유 PC 주의**.)
 
+## 내보내는 형식 (형식 2)
+
+**어떤 피그마든 모든 변수·스타일을 그대로** 내보낸다. 무엇을 CSS 로 쓸지는 각 프로젝트의 변환기가 정한다(이 플러그인은 판단하지 않는다).
+
+| 피그마 | 묶음(최상위 키) | `$type` |
+|---|---|---|
+| 변수 (모든 컬렉션·**모든 모드**) | `<컬렉션>/<모드>` | color · dimension · number · fontFamily · string |
+| 텍스트 스타일 | `Text Styles` | typography (`fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, textDecoration`) |
+| 이펙트 스타일 — 그림자만 | `Effect Styles` | shadow (`[{ color, offsetX, offsetY, blur, spread, inset }]`) |
+| 이펙트 스타일 — 흐림 등 섞임 | `Effect Styles` | effect (`[{ type: dropShadow\|innerShadow\|layerBlur\|backgroundBlur, … }]`) |
+| 색 스타일 — 단색 하나 / 그라디언트 하나 / 그 밖 | `Color Styles` | color / gradient (`{ type, angle?, stops }`) / paint (`[…]`) |
+| 레이아웃 가이드 스타일 | `Grid Styles` | grid (`[{ pattern, count, sectionSize, gutterSize, offset, alignment, color }]`) |
+
+- **값**: 변수에 연결된 값 → 별칭 `{A.B.C}`, 연결 안 된 값 → 스타일의 실제 값(단위 포함 `"16px"`·`"-1%"`·`"normal"`, 색 hex).
+- **메타** `$extensions["com.huray.token-export"]`
+  - 잎: `source`(variable · textStyle · effectStyle · colorStyle · gridStyle), 변수면 `scopes`(피그마 용도 그대로)·`hiddenFromPublishing`
+  - 루트: `formatVersion: 2`, `counts`(종류별 개수), `hiddenLayers`(피그마에서 숨겨 둬 뺀 겹 수)
+- **멈추는 경우는 하나**: 같은 묶음 안에 같은 경로가 두 번 → 하나가 다른 하나를 덮어쓰지 않도록 이유와 함께 멈춘다.
+
 ## 검증
 
 ```bash
 npm test
 ```
 
-출력한 `tokens.json`은 DTCG 포맷이므로, 소비처의 CSS 변환 스크립트(`tokensToCss` 류)가
-읽어 `theme.css` 등을 만든다. **정답 기준 = "CSS 변환이 잘 되는가"** (Token Studio JSON과 똑같을 필요 없음).
+`test/acceptance.test.ts` = 실제 피그마 파일 두 개(Huray DS v0.2·v0.3)로 만든 합격 시험.
 
-테스트(`test/acceptance.test.ts`)는 그 위에 얹은 **회귀 가드**다:
+- `test/fixtures/v0.x.figma-raw.json` — 플러그인의 **"원본 내려받기 (시험용)"** 버튼으로 받은 추출 원본
+- `test/fixtures/v0.x.tokens.json` — 그 원본의 출력 고정본
+- `test/fixtures/hub-v0.2.tokens.json` — 허브의 v0.2 (형식 1) — 변수·타이포가 같은지 대조
 
-- `test/fixtures/figma-raw.json` = Figma에서 1회 Export해 캡처한 raw 데이터. (없으면 skip)
-- `test/fixtures/expected-tokens.json` = 검증된 시점의 `transform(figma-raw)` 출력(baseline).
-- 테스트는 `transform(figma-raw) === baseline` 으로 **출력이 바뀌지 않았는지**만 본다.
-
-Figma 토큰이 바뀌면 두 fixture를 다시 캡처해 갱신한다.
+피그마가 바뀌면 원본을 다시 받아 고정본을 갱신한다.
 
 ## 범위 밖 (YAGNI)
 
