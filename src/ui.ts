@@ -172,18 +172,12 @@ document.getElementById('export-raw')?.addEventListener('click', () => {
   post('export');
 });
 
-// 내보내지 않은 스타일 알림 — 조용히 빠지지 않게.
+// 숨긴 겹 알림 — 피그마에서 꺼 둔 효과·색·격자 겹은 토큰에 넣지 않으므로 개수를 보여 준다.
 function skippedNotice(tokens: unknown): string {
-  const meta = (tokens as { $extensions?: Record<string, { skipped?: unknown }> })?.$extensions?.[
+  const meta = (tokens as { $extensions?: Record<string, { hiddenLayers?: number }> })?.$extensions?.[
     'com.huray.token-export'
   ];
-  const s = meta?.skipped as { paintStyles?: number; gridStyles?: number; effects?: Record<string, number> } | undefined;
-  if (!s) return '';
-  const parts: string[] = [];
-  if (s.paintStyles) parts.push(`색 스타일 ${s.paintStyles}개`);
-  if (s.gridStyles) parts.push(`레이아웃 가이드 ${s.gridStyles}개`);
-  for (const [type, n] of Object.entries(s.effects ?? {})) parts.push(`${type} 효과 ${n}개`);
-  return parts.length ? ` · 내보내지 않음: ${parts.join(', ')}` : '';
+  return meta?.hiddenLayers ? ` · 숨긴 겹 ${meta.hiddenLayers}개 제외` : '';
 }
 
 // Push = 즉석에서 토큰 추출(다운로드 X) → 브랜치 생성 → PUT → PR.

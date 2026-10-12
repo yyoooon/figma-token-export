@@ -1,6 +1,7 @@
 import type {
   SerializedCollection,
   SerializedFigma,
+  SerializedPaint,
   SerializedTextStyle,
   SerializedValue,
   SerializedVariable,
@@ -157,7 +158,8 @@ export function buildVariableSets(figma: SerializedFigma): Record<string, TokenT
       sets[setName] = sets[setName] ?? {};
       const resolve = (x: SerializedValue) => resolveAlias(v, x, mode.modeId, vars, collById);
       const leaf = leafFor(v, value, vars, resolve);
-      insertLeaf(sets[setName], figmaNameToPath(v.name), { ...leaf, $extensions: { [META]: { source: 'variable', scopes: v.scopes } } }, v.name);
+      const meta = { source: 'variable', scopes: v.scopes, ...(v.hiddenFromPublishing ? { hiddenFromPublishing: true } : {}) };
+      insertLeaf(sets[setName], figmaNameToPath(v.name), { ...leaf, $extensions: { [META]: meta } }, v.name);
     }
   }
   return sets;
@@ -199,12 +201,9 @@ function literalOf(prop: TypoProp, style: SerializedTextStyle): string {
     case 'fontSize':
       return `${round(v.fontSize)}px`;
     case 'fontWeight': {
+      // 표준 이름이면 숫자, 모르는 이름이면 그대로 — 판단은 프로젝트 변환기 몫.
       const w = WEIGHT_BY_STYLE[v.fontStyle];
-      if (w == null)
-        throw new Error(
-          `'${style.name}' 텍스트 스타일의 글꼴 스타일 '${v.fontStyle}'를 굵기 숫자로 바꾸지 못했어요. 굵기를 변수에 연결하거나 표준 굵기 이름을 써 주세요.`,
-        );
-      return String(w);
+      return w == null ? v.fontStyle : String(w);
     }
     case 'lineHeight':
       if (v.lineHeight.unit === 'AUTO') return 'normal';
@@ -240,9 +239,18 @@ export function buildTypographyTokens(figma: SerializedFigma): { path: string[];
   }));
 }
 
-// ── 그림자 (이펙트 스타일) ──
-// 그림자는 여러 값이 한 세트라 피그마 변수 하나에 못 담는다 → 이펙트 스타일이 정본.
-// (v0.2 는 그림자를 변수로도 쪼개 두었지만, v0.3 은 스타일만 있다. 스타일 하나로 통일)
+// ── 이펙트·색·격자 스타일 ──
+// 스타일은 여러 값이 한 세트라 피그마 변수 하나에 못 담는다 → 스타일이 정본.
+// 내보내기는 판단하지 않는다: 보이는 겹은 전부, 처음 보는 종류는 이름만이라도 싣는다.
+
+type StyleToken = { path: string[]; leaf: TokenLeaf };
+type Built = { tokens: StyleToken[]; hidden: number };
+
+function refOf(names: Map<string, string>, kind: string, style: string, id: string): string {
+  const target = names.get(id);
+  if (!target) throw new Error(`'${style}' ${kind}이 지금 없는 변수를 사용하고 있어요. 연결된 변수를 확인해 주세요.`);
+  return varNameToRef(target);
+}
 
 const SHADOW_FIELDS = [
   ['offsetX', 'offsetX'],
@@ -251,83 +259,126 @@ const SHADOW_FIELDS = [
   ['spread', 'spread'],
 ] as const; // [출력 필드, 피그마 boundVariables 키]
 
-// 숨긴 겹은 토큰에서 빼되, 조용히 사라지지 않게 개수를 돌려준다(transform 이 skipped 에 싣는다).
-export function buildShadowTokens(figma: SerializedFigma): { path: string[]; leaf: TokenLeaf }[] {
-  return buildShadowTokensWithHidden(figma).tokens;
-}
+const BLUR_TYPE: Record<string, string> = { LAYER_BLUR: 'layerBlur', BACKGROUND_BLUR: 'backgroundBlur' };
 
-export function buildShadowTokensWithHidden(figma: SerializedFigma): { tokens: { path: string[]; leaf: TokenLeaf }[]; hidden: number } {
-  let hidden = 0;
+export function buildEffectTokens(figma: SerializedFigma): Built {
   const names = nameById(figma);
-  const ref = (style: string, id: string) => {
-    const target = names.get(id);
-    if (!target)
-      throw new Error(`'${style}' 이펙트 스타일이 지금 없는 변수를 사용하고 있어요. 연결된 변수를 확인해 주세요.`);
-    return varNameToRef(target);
-  };
-  const out: { path: string[]; leaf: TokenLeaf }[] = [];
+  const tokens: StyleToken[] = [];
+  let hidden = 0;
   for (const style of figma.effectStyles) {
-    const layers = style.shadows.filter((l) => l.visible);
-    hidden += style.shadows.length - layers.length;
-    if (!layers.length) continue;
-    const $value = layers.map((l) => {
+    const ref = (id: string) => refOf(names, '이펙트 스타일', style.name, id);
+    const shadows = style.shadows.filter((l) => l.visible);
+    const blurs = style.blurs.filter((b) => b.visible);
+    hidden += style.shadows.length - shadows.length + style.blurs.length - blurs.length;
+    const shadowValue = shadows.map((l) => {
       const layer: Record<string, string | boolean> = {
-        color: l.boundVariables.color ? ref(style.name, l.boundVariables.color) : rgbaToHex(l.color),
+        color: l.boundVariables.color ? ref(l.boundVariables.color) : rgbaToHex(l.color),
       };
       for (const [field, key] of SHADOW_FIELDS) {
         const id = l.boundVariables[key];
-        layer[field] = id ? ref(style.name, id) : `${round(l[field])}px`;
+        layer[field] = id ? ref(id) : `${round(l[field])}px`;
       }
       layer.inset = l.inset;
       return layer;
     });
-    out.push({
-      path: figmaNameToPath(style.name),
-      leaf: { $type: 'shadow', $value, $extensions: { [META]: { source: 'effectStyle' } } },
-    });
+    const meta = { [META]: { source: 'effectStyle' } };
+    if (!shadows.length && !blurs.length && !style.others.length) continue;
+    if (!blurs.length && !style.others.length) {
+      tokens.push({ path: figmaNameToPath(style.name), leaf: { $type: 'shadow', $value: shadowValue, $extensions: meta } });
+      continue;
+    }
+    // 그림자 외 효과가 섞이면 효과 목록 그대로.
+    const $value = [
+      ...shadowValue.map(({ inset, ...rest }) => ({ type: inset ? 'innerShadow' : 'dropShadow', ...rest })),
+      ...blurs.map((b) => ({ type: BLUR_TYPE[b.type], radius: b.boundRadius ? ref(b.boundRadius) : `${round(b.radius)}px` })),
+      ...style.others.map((type) => ({ type })),
+    ];
+    tokens.push({ path: figmaNameToPath(style.name), leaf: { $type: 'effect', $value, $extensions: meta } });
   }
-  return { tokens: out, hidden };
+  return { tokens, hidden };
 }
 
-// ── 전체 조립 (Task 6) ──
-
-// 합성 타이포가 들어갈 세트 = fontSize로 바인딩된 변수의 컬렉션/모드.
-function typographySetName(figma: SerializedFigma): string | null {
-  const collById = new Map(figma.collections.map((c) => [c.id, c]));
-  for (const style of figma.textStyles) {
-    const id = style.boundVariables.fontSize;
-    if (!id) continue;
-    const v = figma.variables.find((x) => x.id === id);
-    const coll = v && collById.get(v.collectionId);
-    if (coll) return `${coll.name}/${coll.modes[0].name}`;
+function gradientValue(
+  g: Extract<SerializedPaint, { kind: 'GRADIENT' }>,
+  ref: (id: string) => string,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { type: g.gradientType.toLowerCase() };
+  if (g.gradientType === 'LINEAR') {
+    out.angle = round((Math.atan2(g.transform[0][1], g.transform[0][0]) * 180) / Math.PI);
   }
-  return null;
+  out.stops = g.stops.map((st) => ({ color: st.boundColor ? ref(st.boundColor) : rgbaToHex(st.color), position: round(st.position) }));
+  if (g.opacity < 1) out.opacity = round(g.opacity);
+  return out;
 }
+
+export function buildPaintTokens(figma: SerializedFigma): Built {
+  const names = nameById(figma);
+  const tokens: StyleToken[] = [];
+  let hidden = 0;
+  for (const style of figma.paintStyles) {
+    const ref = (id: string) => refOf(names, '색 스타일', style.name, id);
+    const paints = style.paints.filter((p) => p.visible);
+    hidden += style.paints.length - paints.length;
+    if (!paints.length) continue;
+    const meta = { [META]: { source: 'colorStyle' } };
+    const solid = (p: Extract<SerializedPaint, { kind: 'SOLID' }>) =>
+      p.boundColor && p.opacity >= 1 ? ref(p.boundColor) : rgbaToHex({ ...p.color, a: p.opacity });
+    let leaf: TokenLeaf;
+    if (paints.length === 1 && paints[0].kind === 'SOLID') {
+      leaf = { $type: 'color', $value: solid(paints[0]), $extensions: meta };
+    } else if (paints.length === 1 && paints[0].kind === 'GRADIENT') {
+      leaf = { $type: 'gradient', $value: gradientValue(paints[0], ref), $extensions: meta };
+    } else {
+      const $value = paints.map((p) => {
+        if (p.kind === 'SOLID') return { type: 'solid', color: solid(p) };
+        if (p.kind === 'GRADIENT') return { type: 'gradient', ...gradientValue(p, ref) };
+        if (p.kind === 'IMAGE') return { type: 'image', imageHash: p.imageHash, scaleMode: p.scaleMode };
+        return { type: p.type };
+      });
+      leaf = { $type: 'paint', $value, $extensions: meta };
+    }
+    tokens.push({ path: figmaNameToPath(style.name), leaf });
+  }
+  return { tokens, hidden };
+}
+
+export function buildGridTokens(figma: SerializedFigma): Built {
+  const tokens: StyleToken[] = [];
+  let hidden = 0;
+  for (const style of figma.gridStyles) {
+    const grids = style.grids.filter((g) => g.visible !== false);
+    hidden += style.grids.length - grids.length;
+    if (!grids.length) continue;
+    const $value = grids.map(({ visible: _v, color, ...rest }) => ({
+      ...rest,
+      ...(color ? { color: rgbaToHex(color as { r: number; g: number; b: number; a: number }) } : {}),
+    }));
+    tokens.push({ path: figmaNameToPath(style.name), leaf: { $type: 'grid', $value, $extensions: { [META]: { source: 'gridStyle' } } } });
+  }
+  return { tokens, hidden };
+}
+
+// ── 전체 조립 ──
+
+// 스타일 묶음 이름 — '/' 가 없어 '<컬렉션>/<모드>' 로 오해되지 않는다.
+const STYLE_SETS = { text: 'Text Styles', effect: 'Effect Styles', paint: 'Color Styles', grid: 'Grid Styles' };
 
 export function transform(figma: SerializedFigma): TokensJson {
-  // 모드 두 벌 이상(다크 모드 등)은 아직 지원하지 않는다. buildVariableSets 자체는 모드별 세트를
-  // 만들 수 있게 두고(나중 확장 지점), 여기 입구에서 막는다.
-  for (const c of figma.collections) {
-    if (c.modes.length > 1)
-      throw new Error(
-        `'${c.name}' 컬렉션에 모드가 ${c.modes.length}개(${c.modes.map((m) => m.name).join(', ')}) 있어요. 아직 모드 하나만 지원해요.`,
-      );
-  }
-
   const sets = buildVariableSets(figma);
 
-  const typoSet = typographySetName(figma) ?? 'Styles/Default';
-  for (const t of buildTypographyTokens(figma)) {
-    sets[typoSet] = sets[typoSet] ?? {};
-    insertLeaf(sets[typoSet], t.path, t.leaf, t.path.join('/'));
-  }
-
-  // 그림자는 이펙트 스타일에서 온다. Effect 변수(v0.2)는 스타일이 참조하는 부품으로만 남는다.
-  const shadows = buildShadowTokensWithHidden(figma);
-  for (const t of shadows.tokens) {
-    sets['Styles/Default'] = sets['Styles/Default'] ?? {};
-    insertLeaf(sets['Styles/Default'], t.path, t.leaf, t.path.join('/'));
-  }
+  const put = (setName: string, list: StyleToken[]) => {
+    for (const t of list) {
+      sets[setName] = sets[setName] ?? {};
+      insertLeaf(sets[setName], t.path, t.leaf, t.path.join('/'));
+    }
+  };
+  put(STYLE_SETS.text, buildTypographyTokens(figma));
+  const effects = buildEffectTokens(figma);
+  const paints = buildPaintTokens(figma);
+  const grids = buildGridTokens(figma);
+  put(STYLE_SETS.effect, effects.tokens);
+  put(STYLE_SETS.paint, paints.tokens);
+  put(STYLE_SETS.grid, grids.tokens);
 
   const counts: Record<string, number> = {};
   const count = (node: TokenTree) => {
@@ -340,8 +391,6 @@ export function transform(figma: SerializedFigma): TokensJson {
   };
   for (const tree of Object.values(sets)) count(tree);
 
-  const skipped = shadows.hidden
-    ? { ...figma.skipped, effects: { ...figma.skipped.effects, HIDDEN_SHADOW: shadows.hidden } }
-    : figma.skipped;
-  return { $extensions: { [META]: { formatVersion: 2, counts, skipped } }, ...sets };
+  const hiddenLayers = effects.hidden + paints.hidden + grids.hidden;
+  return { $extensions: { [META]: { formatVersion: 2, counts, hiddenLayers } }, ...sets };
 }

@@ -5,7 +5,9 @@ import {
   varNameToRef,
   buildVariableSets,
   buildTypographyTokens,
-  buildShadowTokens,
+  buildEffectTokens,
+  buildPaintTokens,
+  buildGridTokens,
   transform,
   dtcgTypeOf,
 } from '../src/transform';
@@ -34,7 +36,8 @@ function fig(partial: Partial<SerializedFigma>): SerializedFigma {
     variables: [],
     textStyles: [],
     effectStyles: [],
-    skipped: { paintStyles: 0, gridStyles: 0, effects: {} },
+    paintStyles: [],
+    gridStyles: [],
     ...partial,
   };
 }
@@ -196,14 +199,6 @@ describe('buildTypographyTokens — 형식 2', () => {
     expect(t.path).toEqual(['Heading']);
   });
 
-  it('굵기 미연결 + 표에 없는 글꼴 스타일이면 예외', () => {
-    expect(() =>
-      buildTypographyTokens(
-        fig({ textStyles: [{ name: 'A/B', boundVariables: {}, values: { ...baseValues, fontStyle: 'Condensed Bold' } }] }),
-      ),
-    ).toThrow(/Condensed Bold/);
-  });
-
   it('소수 오차는 4자리로 정리한다 (-0.20000000298 → -0.2px)', () => {
     const [t] = buildTypographyTokens(
       fig({
@@ -216,7 +211,7 @@ describe('buildTypographyTokens — 형식 2', () => {
   });
 });
 
-describe('buildShadowTokens', () => {
+describe('buildEffectTokens', () => {
   const colorVar = v({ id: 'vc', name: 'Color/Black Opacity/100', collectionId: 'c', resolvedType: 'COLOR' });
   const layer = {
     inset: false,
@@ -228,39 +223,113 @@ describe('buildShadowTokens', () => {
     spread: 0,
     boundVariables: {},
   };
+  const eff = (name: string, p: Partial<{ shadows: any[]; blurs: any[]; others: string[] }>) => ({
+    name,
+    shadows: [],
+    blurs: [],
+    others: [],
+    ...p,
+  });
 
-  it('겹을 배열로, 연결 값은 별칭, 미연결 값은 px·hex', () => {
-    const [t] = buildShadowTokens(
-      fig({
-        variables: [colorVar],
-        effectStyles: [{ name: 'Elevation/Xsmall', shadows: [{ ...layer, boundVariables: { color: 'vc' } }], otherEffects: [] }],
-      }),
+  it('그림자만 → shadow 배열, 연결 값은 별칭', () => {
+    const { tokens } = buildEffectTokens(
+      fig({ variables: [colorVar], effectStyles: [eff('Elevation/Xsmall', { shadows: [{ ...layer, boundVariables: { color: 'vc' } }] })] }),
     );
-    expect(t.path).toEqual(['Elevation', 'Xsmall']);
-    expect(t.leaf).toEqual({
+    expect(tokens[0].path).toEqual(['Elevation', 'Xsmall']);
+    expect(tokens[0].leaf).toEqual({
       $type: 'shadow',
       $value: [{ color: '{Color.Black Opacity.100}', offsetX: '0px', offsetY: '4px', blur: '16px', spread: '0px', inset: false }],
       $extensions: { 'com.huray.token-export': { source: 'effectStyle' } },
     });
   });
 
-  it('안쪽 그림자는 inset, 숨긴 겹은 뺀다', () => {
-    const [t] = buildShadowTokens(
+  it('흐림·처음 보는 효과가 섞이면 effect 배열', () => {
+    const { tokens } = buildEffectTokens(
       fig({
-        effectStyles: [{ name: 'Inner Shadow', shadows: [{ ...layer, inset: true }, { ...layer, visible: false }], otherEffects: [] }],
+        effectStyles: [
+          eff('Glass', { shadows: [{ ...layer, inset: true }], blurs: [{ type: 'BACKGROUND_BLUR', visible: true, radius: 8 }], others: ['NOISE'] }),
+        ],
       }),
     );
-    expect(t.leaf.$value).toEqual([{ color: '#0000001a', offsetX: '0px', offsetY: '4px', blur: '16px', spread: '0px', inset: true }]);
+    expect(tokens[0].leaf.$type).toBe('effect');
+    expect(tokens[0].leaf.$value).toEqual([
+      { type: 'innerShadow', color: '#0000001a', offsetX: '0px', offsetY: '4px', blur: '16px', spread: '0px' },
+      { type: 'backgroundBlur', radius: '8px' },
+      { type: 'NOISE' },
+    ]);
   });
 
-  it('그림자 겹이 없는 스타일(흐림만)은 토큰을 만들지 않는다', () => {
-    expect(buildShadowTokens(fig({ effectStyles: [{ name: 'Blur/Bg', shadows: [], otherEffects: ['BACKGROUND_BLUR'] }] }))).toEqual([]);
+  it('숨긴 겹은 빼고 개수를 센다, 보이는 겹이 없으면 토큰 없음', () => {
+    const r = buildEffectTokens(fig({ effectStyles: [eff('E', { shadows: [{ ...layer, visible: false }] })] }));
+    expect(r.tokens).toEqual([]);
+    expect(r.hidden).toBe(1);
   });
 
   it('연결 변수가 없으면 예외', () => {
-    expect(() =>
-      buildShadowTokens(fig({ effectStyles: [{ name: 'E', shadows: [{ ...layer, boundVariables: { radius: 'nope' } }], otherEffects: [] }] })),
-    ).toThrow(/'E'/);
+    expect(() => buildEffectTokens(fig({ effectStyles: [eff('E', { shadows: [{ ...layer, boundVariables: { radius: 'nope' } }] })] }))).toThrow(/'E'/);
+  });
+});
+
+describe('buildPaintTokens', () => {
+  const white = v({ id: 'vw', name: 'Fill/Base', collectionId: 'c', resolvedType: 'COLOR' });
+  const ps = (name: string, paints: any[]) => ({ name, paints });
+
+  it('단색 하나 → color (연결이면 별칭, 아니면 불투명도 곱한 hex)', () => {
+    const { tokens } = buildPaintTokens(
+      fig({
+        variables: [white],
+        paintStyles: [
+          ps('Guide/Base', [{ kind: 'SOLID', visible: true, color: { r: 1, g: 1, b: 1 }, opacity: 1, boundColor: 'vw' }]),
+          ps('Guide/Red', [{ kind: 'SOLID', visible: true, color: { r: 1, g: 0, b: 0 }, opacity: 0.5 }]),
+        ],
+      }),
+    );
+    expect(tokens.map((t) => t.leaf.$value)).toEqual(['{Fill.Base}', '#ff000080']);
+    expect(tokens[0].leaf.$type).toBe('color');
+  });
+
+  it('그라디언트 하나 → gradient (선형은 각도)', () => {
+    const { tokens } = buildPaintTokens(
+      fig({
+        variables: [white],
+        paintStyles: [
+          ps('Fade/Top', [
+            {
+              kind: 'GRADIENT',
+              gradientType: 'LINEAR',
+              visible: true,
+              opacity: 1,
+              stops: [
+                { color: { r: 1, g: 1, b: 1, a: 1 }, position: 0, boundColor: 'vw' },
+                { color: { r: 1, g: 1, b: 1, a: 0 }, position: 1 },
+              ],
+              transform: [
+                [0, 1, 0],
+                [-1, 0, 1],
+              ],
+            },
+          ]),
+        ],
+      }),
+    );
+    expect(tokens[0].leaf).toMatchObject({
+      $type: 'gradient',
+      $value: { type: 'linear', angle: 90, stops: [{ color: '{Fill.Base}', position: 0 }, { color: '#ffffff00', position: 1 }] },
+    });
+  });
+
+  it('이미지·여러 겹 → paint 배열', () => {
+    const { tokens } = buildPaintTokens(fig({ paintStyles: [ps('Photo', [{ kind: 'IMAGE', visible: true, imageHash: 'abc', scaleMode: 'FILL' }])] }));
+    expect(tokens[0].leaf).toMatchObject({ $type: 'paint', $value: [{ type: 'image', imageHash: 'abc', scaleMode: 'FILL' }] });
+  });
+});
+
+describe('buildGridTokens', () => {
+  it('격자는 grid 배열, 색은 hex', () => {
+    const { tokens } = buildGridTokens(
+      fig({ gridStyles: [{ name: 'Icon drawing guide', grids: [{ pattern: 'GRID', sectionSize: 1, visible: true, color: { r: 1, g: 0, b: 0, a: 0.1 } }] }] }),
+    );
+    expect(tokens[0].leaf).toMatchObject({ $type: 'grid', $value: [{ pattern: 'GRID', sectionSize: 1, color: '#ff00001a' }] });
   });
 });
 
@@ -361,7 +430,7 @@ describe('깨진 참조 — 에러에 이름을 담아 던진다', () => {
   });
 });
 
-describe('형식 2 — 메타·겹침·모드', () => {
+describe('범용 추출 — 묶음·메타·모드', () => {
   const coll = { id: 'c', name: 'Component', modes: [{ modeId: 'm', name: 'Mode 1' }] };
   const radius = v({
     id: 'r',
@@ -381,34 +450,39 @@ describe('형식 2 — 메타·겹침·모드', () => {
     });
   });
 
-  it('루트에 형식 버전·개수표·건너뜀', () => {
+  it('루트에 형식 버전·개수표·숨긴 겹 수', () => {
     const out = transform(
       fig({ collections: [coll], variables: [radius], textStyles: [{ name: 'Body/M/Bold', boundVariables: {}, values: baseValues }] }),
     );
     expect(out.$extensions).toEqual({
-      'com.huray.token-export': {
-        formatVersion: 2,
-        counts: { dimension: 1, typography: 1 },
-        skipped: { paintStyles: 0, gridStyles: 0, effects: {} },
-      },
+      'com.huray.token-export': { formatVersion: 2, counts: { dimension: 1, typography: 1 }, hiddenLayers: 0 },
     });
   });
 
-  it('타이포 경로가 같은 묶음의 변수와 겹치면 예외', () => {
-    expect(() =>
-      transform(
-        fig({
-          collections: [coll],
-          variables: [
-            v({ id: 's', name: 'Body/M', collectionId: 'c', resolvedType: 'FLOAT', scopes: ['FONT_SIZE'], valuesByMode: { m: { kind: 'FLOAT', value: 16 } } }),
-          ],
-          textStyles: [{ name: 'Body/M/Bold', boundVariables: { fontSize: 's' }, values: baseValues }],
-        }),
-      ),
-    ).toThrow(/Body\/M/);
+  it('모드가 두 벌이면 둘 다 내보낸다 (멈추지 않음)', () => {
+    const scheme = { id: 's', name: 'Scheme', modes: [{ modeId: 'l', name: 'Light' }, { modeId: 'd', name: 'Dark' }] };
+    const fg = v({ id: 'fg', name: 'Fg', collectionId: 's', resolvedType: 'COLOR', valuesByMode: { l: { kind: 'COLOR', r: 0, g: 0, b: 0, a: 1 }, d: { kind: 'COLOR', r: 1, g: 1, b: 1, a: 1 } } });
+    const out = transform(fig({ collections: [scheme], variables: [fg] })) as any;
+    expect(out['Scheme/Light'].Fg.$value).toBe('#000000');
+    expect(out['Scheme/Dark'].Fg.$value).toBe('#ffffff');
   });
 
-  it('같은 이름의 스타일 두 개면 예외', () => {
+  it('스타일은 종류별 묶음 — 같은 이름의 텍스트·색 스타일이 겹치지 않는다', () => {
+    const out = transform(
+      fig({
+        textStyles: [{ name: 'Body/M', boundVariables: {}, values: baseValues }],
+        paintStyles: [{ name: 'Body/M', paints: [{ kind: 'SOLID', visible: true, color: { r: 0, g: 0, b: 0 }, opacity: 1 }] }],
+        effectStyles: [{ name: 'Elevation/Xsmall', shadows: [{ inset: false, visible: true, color: { r: 0, g: 0, b: 0, a: 0.1 }, offsetX: 0, offsetY: 1, blur: 2, spread: 0, boundVariables: {} }], blurs: [], others: [] }],
+        gridStyles: [{ name: 'Guide', grids: [{ pattern: 'GRID', sectionSize: 8, visible: true }] }],
+      }),
+    ) as any;
+    expect(out['Text Styles'].Body.M.$type).toBe('typography');
+    expect(out['Color Styles'].Body.M.$type).toBe('color');
+    expect(out['Effect Styles'].Elevation.Xsmall.$type).toBe('shadow');
+    expect(out['Grid Styles'].Guide.$type).toBe('grid');
+  });
+
+  it('같은 이름의 텍스트 스타일 두 개면 예외', () => {
     expect(() =>
       transform(
         fig({
@@ -421,45 +495,23 @@ describe('형식 2 — 메타·겹침·모드', () => {
     ).toThrow(/Body\/M/);
   });
 
-  it('모드가 2개인 컬렉션이면 예외', () => {
-    expect(() =>
-      transform(fig({ collections: [{ id: 'c', name: 'Scheme', modes: [{ modeId: 'l', name: 'Light' }, { modeId: 'd', name: 'Dark' }] }] })),
-    ).toThrow(/Scheme.*Light.*Dark/);
-  });
-
-  it('그림자는 Styles/Default 묶음, 건너뛴 스타일 개수는 루트 메타에', () => {
-    const out = transform(
-      fig({
-        effectStyles: [
-          {
-            name: 'Elevation/Xsmall',
-            shadows: [{ inset: false, visible: true, color: { r: 0, g: 0, b: 0, a: 0.1 }, offsetX: 0, offsetY: 1, blur: 2, spread: 0, boundVariables: {} }],
-            otherEffects: [],
-          },
-        ],
-        skipped: { paintStyles: 2, gridStyles: 1, effects: {} },
-      }),
-    ) as any;
-    expect(out['Styles/Default'].Elevation.Xsmall.$type).toBe('shadow');
-    expect(out.$extensions['com.huray.token-export'].skipped).toEqual({ paintStyles: 2, gridStyles: 1, effects: {} });
-    expect(out.$extensions['com.huray.token-export'].counts.shadow).toBe(1);
-  });
-
-  it('숨긴 그림자 겹은 토큰에서 빠지되 skipped 에 센다', () => {
+  it('숨긴 겹은 루트 hiddenLayers 에 센다', () => {
     const hidden = { inset: false, visible: false, color: { r: 0, g: 0, b: 0, a: 0.1 }, offsetX: 0, offsetY: 1, blur: 2, spread: 0, boundVariables: {} };
-    const out = transform(fig({ effectStyles: [{ name: 'Elevation/Xsmall', shadows: [hidden], otherEffects: [] }] })) as any;
-    expect(out['Styles/Default']).toBeUndefined();
-    expect(out.$extensions['com.huray.token-export'].skipped.effects).toEqual({ HIDDEN_SHADOW: 1 });
+    const out = transform(fig({ effectStyles: [{ name: 'E', shadows: [hidden], blurs: [], others: [] }] })) as any;
+    expect(out['Effect Styles']).toBeUndefined();
+    expect(out.$extensions['com.huray.token-export'].hiddenLayers).toBe(1);
   });
 
-  it('글자 크기 미연결 스타일만 있으면 Styles/Default 묶음에 둔다', () => {
-    const out = transform(fig({ textStyles: [{ name: 'Body/M/Bold', boundVariables: {}, values: baseValues }] })) as any;
-    expect(out['Styles/Default'].Body.M.Bold.$type).toBe('typography');
+  it('굵기 미연결 + 모르는 글꼴 스타일 이름은 그대로 (멈추지 않음)', () => {
+    const out = transform(
+      fig({ textStyles: [{ name: 'A/B', boundVariables: {}, values: { ...baseValues, fontStyle: 'Condensed Bold' } }] }),
+    ) as any;
+    expect(out['Text Styles'].A.B.$value.fontWeight).toBe('Condensed Bold');
   });
 });
 
 describe('transform (assembly)', () => {
-  it('merges typography into the set holding its bound primitives (no Token Studio metadata)', () => {
+  it('typography goes to Text Styles; primitives stay in their set (no Token Studio metadata)', () => {
     const figma = fig({
       collections: [{ id: 'c1', name: 'Primitive', modes: [{ modeId: 'm1', name: 'Light' }] }],
       variables: [
@@ -474,7 +526,7 @@ describe('transform (assembly)', () => {
       ],
     });
     const out = transform(figma) as any;
-    expect(out['Primitive/Light']['Display']['lg-bold'].$type).toBe('typography');
+    expect(out['Text Styles']['Display']['lg-bold'].$type).toBe('typography');
     expect(out['Primitive/Light']['fontSize']['9']).toMatchObject({ $type: 'dimension', $value: '40px' });
     expect(out['$themes']).toBeUndefined();
     expect(out['$metadata']).toBeUndefined();
