@@ -83,6 +83,7 @@ export interface SerializedFigma {
 export type TokenLeaf = {
   $type: string;
   $value: unknown;
+  $extensions?: Record<string, unknown>;
 };
 export interface TokenTree {
   [key: string]: TokenTree | TokenLeaf;

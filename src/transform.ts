@@ -1,6 +1,7 @@
 import type {
   SerializedCollection,
   SerializedFigma,
+  SerializedTextStyle,
   SerializedValue,
   SerializedVariable,
   TokenLeaf,
@@ -155,32 +156,81 @@ export function buildVariableSets(figma: SerializedFigma): Record<string, TokenT
   return sets;
 }
 
-// ── 합성 타이포 (Task 5) ──
+// ── 합성 타이포 ──
 
-// DTCG typography 합성 — 표준 5필드만 (Token Studio 합성 필드는 안 붙인다).
-const TYPO_PROPS = ['fontFamily', 'fontWeight', 'lineHeight', 'fontSize', 'letterSpacing'] as const;
+const META = 'com.huray.token-export';
 
-export function buildTypographyTokens(figma: SerializedFigma): TokenTree {
-  const names = nameById(figma);
-  const tree: TokenTree = {};
-  for (const style of figma.textStyles) {
-    const [group, variant] = style.name.split('/');
-    if (!group || !variant) continue;
-    const $value: Record<string, string> = {};
-    for (const prop of TYPO_PROPS) {
-      const id = style.boundVariables[prop];
-      if (!id) continue;
+// 피그마 글꼴 스타일 이름 → CSS 굵기. 굵기가 변수에 연결 안 된 스타일에서만 쓴다.
+const WEIGHT_BY_STYLE: Record<string, number> = {
+  Thin: 100,
+  ExtraLight: 200,
+  'Extra Light': 200,
+  Light: 300,
+  Regular: 400,
+  Medium: 500,
+  SemiBold: 600,
+  'Semi Bold': 600,
+  Bold: 700,
+  ExtraBold: 800,
+  'Extra Bold': 800,
+  Black: 900,
+};
+
+const round = (n: number) => Number(n.toFixed(4));
+
+const DECORATION: Record<string, string> = { NONE: 'none', UNDERLINE: 'underline', STRIKETHROUGH: 'line-through' };
+
+type TypoProp = 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight' | 'letterSpacing';
+const TYPO_PROPS: TypoProp[] = ['fontFamily', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing'];
+
+// 변수에 연결 안 된 속성 → 스타일의 실제 값(단위 포함 문자열).
+function literalOf(prop: TypoProp, style: SerializedTextStyle): string {
+  const v = style.values;
+  switch (prop) {
+    case 'fontFamily':
+      return v.fontFamily;
+    case 'fontSize':
+      return `${round(v.fontSize)}px`;
+    case 'fontWeight': {
+      const w = WEIGHT_BY_STYLE[v.fontStyle];
+      if (w == null)
+        throw new Error(
+          `'${style.name}' 텍스트 스타일의 글꼴 스타일 '${v.fontStyle}'를 굵기 숫자로 바꾸지 못했어요. 굵기를 변수에 연결하거나 표준 굵기 이름을 써 주세요.`,
+        );
+      return String(w);
+    }
+    case 'lineHeight':
+      if (v.lineHeight.unit === 'AUTO') return 'normal';
+      return `${round(v.lineHeight.value ?? 0)}${v.lineHeight.unit === 'PIXELS' ? 'px' : '%'}`;
+    case 'letterSpacing':
+      return `${round(v.letterSpacing.value)}${v.letterSpacing.unit === 'PIXELS' ? 'px' : '%'}`;
+  }
+}
+
+export function typographyValue(style: SerializedTextStyle, names: Map<string, string>): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const prop of TYPO_PROPS) {
+    const id = style.boundVariables[prop];
+    if (id) {
       const target = names.get(id);
       if (!target)
-        throw new Error(
-          `'${style.name}' 텍스트 스타일이 지금 없는 변수를 사용하고 있어요. 연결된 변수를 확인해 주세요.`,
-        );
-      $value[prop] = varNameToRef(target);
+        throw new Error(`'${style.name}' 텍스트 스타일이 지금 없는 변수를 사용하고 있어요. 연결된 변수를 확인해 주세요.`);
+      out[prop] = varNameToRef(target);
+    } else {
+      out[prop] = literalOf(prop, style);
     }
-    tree[group] = tree[group] ?? {};
-    (tree[group] as TokenTree)[variant] = { $type: 'typography', $value };
   }
-  return tree;
+  out.textDecoration = DECORATION[style.values.textDecoration] ?? 'none';
+  return out;
+}
+
+// 스타일 하나 = 토큰 하나. 이름 전체가 경로다(Body/M/Bold). 트리에 넣는 건 호출자가 한다(겹침 검사).
+export function buildTypographyTokens(figma: SerializedFigma): { path: string[]; leaf: TokenLeaf }[] {
+  const names = nameById(figma);
+  return figma.textStyles.map((style) => ({
+    path: figmaNameToPath(style.name),
+    leaf: { $type: 'typography', $value: typographyValue(style, names), $extensions: { [META]: { source: 'textStyle' } } },
+  }));
 }
 
 // ── 전체 조립 (Task 6) ──
@@ -198,24 +248,15 @@ function typographySetName(figma: SerializedFigma): string | null {
   return null;
 }
 
-function deepMerge(target: TokenTree, source: TokenTree): void {
-  for (const [k, val] of Object.entries(source)) {
-    if (val && typeof val === 'object' && !('$value' in val) && target[k]) {
-      deepMerge(target[k] as TokenTree, val as TokenTree);
-    } else {
-      target[k] = val as TokenTree[string];
-    }
-  }
-}
-
 export function transform(figma: SerializedFigma): TokensJson {
   const sets = buildVariableSets(figma);
 
-  const typo = buildTypographyTokens(figma);
   const typoSet = typographySetName(figma);
-  if (typoSet && Object.keys(typo).length) {
-    sets[typoSet] = sets[typoSet] ?? {};
-    deepMerge(sets[typoSet], typo);
+  if (typoSet) {
+    for (const t of buildTypographyTokens(figma)) {
+      sets[typoSet] = sets[typoSet] ?? {};
+      setLeaf(sets[typoSet], t.path, t.leaf);
+    }
   }
 
   // Effect/Mode 1 은 'Effect' 변수 컬렉션에서 buildVariableSets 가 이미 만든다.

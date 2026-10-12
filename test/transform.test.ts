@@ -41,6 +41,16 @@ function v(p: Partial<SerializedVariable> & Pick<SerializedVariable, 'id' | 'nam
   return { valuesByMode: {}, scopes: ['ALL_SCOPES'], hiddenFromPublishing: false, ...p };
 }
 
+// 텍스트 스타일 실제 값 기본(굵게 16/24, 자간 -1%).
+const baseValues = {
+  fontFamily: 'Pretendard',
+  fontStyle: 'Bold',
+  fontSize: 16,
+  lineHeight: { unit: 'PIXELS' as const, value: 24 },
+  letterSpacing: { unit: 'PERCENT' as const, value: -1 },
+  textDecoration: 'NONE' as const,
+};
+
 describe('figmaNameToPath', () => {
   it('splits on / and keeps spaces inside segments', () => {
     expect(figmaNameToPath('Color/White Opacity/950')).toEqual(['Color', 'White Opacity', '950']);
@@ -127,36 +137,81 @@ describe('buildVariableSets', () => {
   });
 });
 
-describe('buildTypographyTokens', () => {
-  const figma = fig({
-    collections: [{ id: 'c1', name: 'Primitive', modes: [{ modeId: 'm1', name: 'Light' }] }],
-    variables: [
-      v({ id: 'fs9', name: 'fontSize/9', collectionId: 'c1', resolvedType: 'FLOAT' }),
-      v({ id: 'lh', name: 'Typography/Light height/leading-11', collectionId: 'c1', resolvedType: 'FLOAT' }),
-      v({ id: 'fw', name: 'fontWeights/pretendard-0', collectionId: 'c1', resolvedType: 'FLOAT' }),
-      v({ id: 'ls', name: 'letterSpacing/0', collectionId: 'c1', resolvedType: 'FLOAT' }),
-      v({ id: 'ff', name: 'Typography/Font/Sans-serif', collectionId: 'c1', resolvedType: 'STRING' }),
-    ],
-    textStyles: [
-      {
-        name: 'Display/lg-bold',
-        boundVariables: { fontFamily: 'ff', fontWeight: 'fw', lineHeight: 'lh', fontSize: 'fs9', letterSpacing: 'ls' },
-      },
-    ],
+describe('buildTypographyTokens — 형식 2', () => {
+  const sizeVar = v({ id: 'vs', name: 'Typography/Size/Size-6', collectionId: 'c', resolvedType: 'FLOAT', scopes: ['FONT_SIZE'] });
+
+  it('스타일 이름 전체를 경로로 쓴다 (Body/M/Bold 와 Body/M/Regular 공존)', () => {
+    const out = buildTypographyTokens(
+      fig({
+        variables: [sizeVar],
+        textStyles: [
+          { name: 'Body/M/Bold', boundVariables: { fontSize: 'vs' }, values: baseValues },
+          { name: 'Body/M/Regular', boundVariables: { fontSize: 'vs' }, values: { ...baseValues, fontStyle: 'Regular' } },
+        ],
+      }),
+    );
+    expect(out.map((t) => t.path.join('/'))).toEqual(['Body/M/Bold', 'Body/M/Regular']);
   });
 
-  it('builds composite typography token with 5 standard fields only', () => {
-    const t = buildTypographyTokens(figma);
-    expect((t as any)['Display']['lg-bold']).toEqual({
+  it('연결 값은 별칭, 미연결 값은 단위 붙은 실제 값', () => {
+    const [t] = buildTypographyTokens(
+      fig({ variables: [sizeVar], textStyles: [{ name: 'Body/M/Bold', boundVariables: { fontSize: 'vs' }, values: baseValues }] }),
+    );
+    expect(t.leaf).toEqual({
       $type: 'typography',
       $value: {
-        fontFamily: '{Typography.Font.Sans-serif}',
-        fontWeight: '{fontWeights.pretendard-0}',
-        lineHeight: '{Typography.Light height.leading-11}',
-        fontSize: '{fontSize.9}',
-        letterSpacing: '{letterSpacing.0}',
+        fontFamily: 'Pretendard',
+        fontSize: '{Typography.Size.Size-6}',
+        fontWeight: '700',
+        lineHeight: '24px',
+        letterSpacing: '-1%',
+        textDecoration: 'none',
       },
+      $extensions: { 'com.huray.token-export': { source: 'textStyle' } },
     });
+  });
+
+  it('행간 AUTO → normal, PERCENT → %, 밑줄 → underline', () => {
+    const [t] = buildTypographyTokens(
+      fig({
+        textStyles: [
+          {
+            name: 'Caption/lg-medium-underline',
+            boundVariables: {},
+            values: { ...baseValues, fontStyle: 'Medium', lineHeight: { unit: 'AUTO' }, textDecoration: 'UNDERLINE' },
+          },
+        ],
+      }),
+    );
+    expect(t.leaf.$value).toMatchObject({ lineHeight: 'normal', fontWeight: '500', textDecoration: 'underline' });
+    const [p] = buildTypographyTokens(
+      fig({ textStyles: [{ name: 'A/B', boundVariables: {}, values: { ...baseValues, lineHeight: { unit: 'PERCENT', value: 150 } } }] }),
+    );
+    expect(p.leaf.$value).toMatchObject({ lineHeight: '150%' });
+  });
+
+  it('이름에 / 가 없어도 한 칸 경로로 내보낸다', () => {
+    const [t] = buildTypographyTokens(fig({ textStyles: [{ name: 'Heading', boundVariables: {}, values: baseValues }] }));
+    expect(t.path).toEqual(['Heading']);
+  });
+
+  it('굵기 미연결 + 표에 없는 글꼴 스타일이면 예외', () => {
+    expect(() =>
+      buildTypographyTokens(
+        fig({ textStyles: [{ name: 'A/B', boundVariables: {}, values: { ...baseValues, fontStyle: 'Condensed Bold' } }] }),
+      ),
+    ).toThrow(/Condensed Bold/);
+  });
+
+  it('소수 오차는 4자리로 정리한다 (-0.20000000298 → -0.2px)', () => {
+    const [t] = buildTypographyTokens(
+      fig({
+        textStyles: [
+          { name: 'A/B', boundVariables: {}, values: { ...baseValues, letterSpacing: { unit: 'PIXELS', value: -0.20000000298023224 } } },
+        ],
+      }),
+    );
+    expect(t.leaf.$value).toMatchObject({ letterSpacing: '-0.2px' });
   });
 });
 
@@ -251,7 +306,7 @@ describe('깨진 참조 — 에러에 이름을 담아 던진다', () => {
   it('텍스트 스타일이 없는 변수를 참조하면 스타일 이름을 담아 throw', () => {
     const figma = fig({
       collections: [{ id: 'c1', name: 'Primitive', modes: [{ modeId: 'm1', name: 'Light' }] }],
-      textStyles: [{ name: 'Display/lg-bold', boundVariables: { fontSize: 'ghost' } }],
+      textStyles: [{ name: 'Display/lg-bold', boundVariables: { fontSize: 'ghost' }, values: baseValues }],
     });
     expect(() => buildTypographyTokens(figma)).toThrowError(/Display\/lg-bold/);
   });
@@ -269,7 +324,7 @@ describe('transform (assembly)', () => {
         v({ id: 'ff', name: 'Typography/Font/Sans-serif', collectionId: 'c1', resolvedType: 'STRING', valuesByMode: { m1: { kind: 'STRING', value: 'Pretendard' } } }),
       ],
       textStyles: [
-        { name: 'Display/lg-bold', boundVariables: { fontFamily: 'ff', fontWeight: 'fw', lineHeight: 'lh', fontSize: 'fs9', letterSpacing: 'ls' } },
+        { name: 'Display/lg-bold', boundVariables: { fontFamily: 'ff', fontWeight: 'fw', lineHeight: 'lh', fontSize: 'fs9', letterSpacing: 'ls' }, values: baseValues },
       ],
     });
     const out = transform(figma) as any;
