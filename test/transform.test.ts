@@ -115,7 +115,7 @@ describe('buildVariableSets', () => {
 
   it('COLOR 리프 → color + hex', () => {
     const sets = buildVariableSets(base);
-    expect((sets['Primitive/Light'] as any)['Color']['White Opacity']['950']).toEqual({
+    expect((sets['Primitive/Light'] as any)['Color']['White Opacity']['950']).toMatchObject({
       $type: 'color',
       $value: '#fffffff2',
     });
@@ -123,7 +123,7 @@ describe('buildVariableSets', () => {
 
   it('FLOAT+CORNER_RADIUS → dimension + "16px"', () => {
     const sets = buildVariableSets(base);
-    expect((sets['Primitive/Light'] as any)['Radius']['16']).toEqual({
+    expect((sets['Primitive/Light'] as any)['Radius']['16']).toMatchObject({
       $type: 'dimension',
       $value: '16px',
     });
@@ -131,7 +131,7 @@ describe('buildVariableSets', () => {
 
   it('ALIAS → 대상(color) 타입 + 전체경로 ref', () => {
     const sets = buildVariableSets(base);
-    expect((sets['Scheme/Light'] as any)['Text']['White']['Rest']).toEqual({
+    expect((sets['Scheme/Light'] as any)['Text']['White']['Rest']).toMatchObject({
       $type: 'color',
       $value: '{Color.White Opacity.950}',
     });
@@ -279,11 +279,11 @@ describe('buildVariableSets — Effect 컬렉션이 그림자 세트를 만든�
     });
     const sets = buildVariableSets(figma);
     const oc = (sets['Effect/Mode 1'] as any)['Inner Shadow']['Over contents'];
-    expect(oc.Color).toEqual({
+    expect(oc.Color).toMatchObject({
       $type: 'color',
       $value: '{Color.White Opacity.950}',
     });
-    expect(oc.X).toEqual({
+    expect(oc.X).toMatchObject({
       $type: 'dimension',
       $value: '-8px',
     });
@@ -304,23 +304,23 @@ describe('buildVariableSets — 묶음 색(변수 참조 + 투명도)', () => {
 
   it('색 별칭 + 숫자 투명도(퍼센트) → #0000004d', () => {
     expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'black' }, opacity: { kind: 'FLOAT', value: 30 } }))
-      .toEqual({ $type: 'color', $value: '#0000004d' });
+      .toMatchObject({ $type: 'color', $value: '#0000004d' });
   });
 
   it('색 별칭 + 투명도 별칭 → 둘 다 따라가서 #0000004d', () => {
     expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'black' }, opacity: { kind: 'ALIAS', id: 'op30' } }))
-      .toEqual({ $type: 'color', $value: '#0000004d' });
+      .toMatchObject({ $type: 'color', $value: '#0000004d' });
   });
 
   it('원색 + 투명도 별칭 → 색 자체 알파에 곱한다', () => {
     expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'COLOR', r: 1, g: 1, b: 1, a: 0.5 }, opacity: { kind: 'ALIAS', id: 'op30' } }))
-      .toEqual({ $type: 'color', $value: '#ffffff26' });
+      .toMatchObject({ $type: 'color', $value: '#ffffff26' });
   });
 
   it('별칭이 여러 번 이어져도 끝까지 따라간다', () => {
     const mid = v({ id: 'mid', name: 'Color/Black', collectionId: 'c1', resolvedType: 'COLOR', valuesByMode: { m1: { kind: 'ALIAS', id: 'black' } } });
     expect(out({ kind: 'COMPOSED_COLOR', color: { kind: 'ALIAS', id: 'mid' }, opacity: { kind: 'FLOAT', value: 30 } }, [mid]))
-      .toEqual({ $type: 'color', $value: '#0000004d' });
+      .toMatchObject({ $type: 'color', $value: '#0000004d' });
   });
 
   it('모드가 여러 개 — 같은 컬렉션 참조는 같은 모드, 다른 컬렉션은 기본(첫) 모드', () => {
@@ -358,6 +358,96 @@ describe('깨진 참조 — 에러에 이름을 담아 던진다', () => {
       textStyles: [{ name: 'Display/lg-bold', boundVariables: { fontSize: 'ghost' }, values: baseValues }],
     });
     expect(() => buildTypographyTokens(figma)).toThrowError(/Display\/lg-bold/);
+  });
+});
+
+describe('형식 2 — 메타·겹침·모드', () => {
+  const coll = { id: 'c', name: 'Component', modes: [{ modeId: 'm', name: 'Mode 1' }] };
+  const radius = v({
+    id: 'r',
+    name: 'Radius/250',
+    collectionId: 'c',
+    resolvedType: 'FLOAT',
+    scopes: ['CORNER_RADIUS'],
+    valuesByMode: { m: { kind: 'FLOAT', value: 20 } },
+  });
+
+  it('변수 잎에 source·scopes 를 싣는다', () => {
+    const out = transform(fig({ collections: [coll], variables: [radius] }));
+    expect((out['Component/Mode 1'] as any).Radius['250']).toEqual({
+      $type: 'dimension',
+      $value: '20px',
+      $extensions: { 'com.huray.token-export': { source: 'variable', scopes: ['CORNER_RADIUS'] } },
+    });
+  });
+
+  it('루트에 형식 버전·개수표·건너뜀', () => {
+    const out = transform(
+      fig({ collections: [coll], variables: [radius], textStyles: [{ name: 'Body/M/Bold', boundVariables: {}, values: baseValues }] }),
+    );
+    expect(out.$extensions).toEqual({
+      'com.huray.token-export': {
+        formatVersion: 2,
+        counts: { dimension: 1, typography: 1 },
+        skipped: { paintStyles: 0, gridStyles: 0, effects: {} },
+      },
+    });
+  });
+
+  it('타이포 경로가 같은 묶음의 변수와 겹치면 예외', () => {
+    expect(() =>
+      transform(
+        fig({
+          collections: [coll],
+          variables: [
+            v({ id: 's', name: 'Body/M', collectionId: 'c', resolvedType: 'FLOAT', scopes: ['FONT_SIZE'], valuesByMode: { m: { kind: 'FLOAT', value: 16 } } }),
+          ],
+          textStyles: [{ name: 'Body/M/Bold', boundVariables: { fontSize: 's' }, values: baseValues }],
+        }),
+      ),
+    ).toThrow(/Body\/M/);
+  });
+
+  it('같은 이름의 스타일 두 개면 예외', () => {
+    expect(() =>
+      transform(
+        fig({
+          textStyles: [
+            { name: 'Body/M', boundVariables: {}, values: baseValues },
+            { name: 'Body/M', boundVariables: {}, values: baseValues },
+          ],
+        }),
+      ),
+    ).toThrow(/Body\/M/);
+  });
+
+  it('모드가 2개인 컬렉션이면 예외', () => {
+    expect(() =>
+      transform(fig({ collections: [{ id: 'c', name: 'Scheme', modes: [{ modeId: 'l', name: 'Light' }, { modeId: 'd', name: 'Dark' }] }] })),
+    ).toThrow(/Scheme.*Light.*Dark/);
+  });
+
+  it('그림자는 Styles/Default 묶음, 건너뛴 스타일 개수는 루트 메타에', () => {
+    const out = transform(
+      fig({
+        effectStyles: [
+          {
+            name: 'Elevation/Xsmall',
+            shadows: [{ inset: false, visible: true, color: { r: 0, g: 0, b: 0, a: 0.1 }, offsetX: 0, offsetY: 1, blur: 2, spread: 0, boundVariables: {} }],
+            otherEffects: [],
+          },
+        ],
+        skipped: { paintStyles: 2, gridStyles: 1, effects: {} },
+      }),
+    ) as any;
+    expect(out['Styles/Default'].Elevation.Xsmall.$type).toBe('shadow');
+    expect(out.$extensions['com.huray.token-export'].skipped).toEqual({ paintStyles: 2, gridStyles: 1, effects: {} });
+    expect(out.$extensions['com.huray.token-export'].counts.shadow).toBe(1);
+  });
+
+  it('글자 크기 미연결 스타일만 있으면 Styles/Default 묶음에 둔다', () => {
+    const out = transform(fig({ textStyles: [{ name: 'Body/M/Bold', boundVariables: {}, values: baseValues }] })) as any;
+    expect(out['Styles/Default'].Body.M.Bold.$type).toBe('typography');
   });
 });
 

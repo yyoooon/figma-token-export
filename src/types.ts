@@ -89,5 +89,6 @@ export interface TokenTree {
   [key: string]: TokenTree | TokenLeaf;
 }
 export interface TokensJson {
-  [setName: string]: TokenTree;
+  $extensions?: Record<string, unknown>;
+  [setName: string]: TokenTree | Record<string, unknown> | undefined;
 }

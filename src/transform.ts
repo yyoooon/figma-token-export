@@ -126,14 +126,20 @@ function leafFor(
   }
 }
 
-function setLeaf(tree: TokenTree, path: string[], leaf: TokenLeaf): void {
+// 겹치면 멈춘다 — 조용히 덮어쓰면 v0.3 처럼 33개가 14개로 줄어도 아무도 모른다.
+export function insertLeaf(tree: TokenTree, path: string[], leaf: TokenLeaf, label: string): void {
   let node = tree;
   for (let i = 0; i < path.length - 1; i++) {
     const key = path[i];
-    if (!(key in node)) node[key] = {};
+    const next = node[key];
+    if (next && '$value' in next)
+      throw new Error(`'${label}' 경로 '${path.slice(0, i + 1).join('/')}'에 이미 토큰이 있어요. 이름이 겹치지 않게 바꿔 주세요.`);
+    if (!next) node[key] = {};
     node = node[key] as TokenTree;
   }
-  node[path[path.length - 1]] = leaf;
+  const last = path[path.length - 1];
+  if (last in node) throw new Error(`'${label}' 경로 '${path.join('/')}'가 다른 토큰과 겹쳐요. 이름이 겹치지 않게 바꿔 주세요.`);
+  node[last] = leaf;
 }
 
 export function buildVariableSets(figma: SerializedFigma): Record<string, TokenTree> {
@@ -150,7 +156,8 @@ export function buildVariableSets(figma: SerializedFigma): Record<string, TokenT
       if (value == null) continue;
       sets[setName] = sets[setName] ?? {};
       const resolve = (x: SerializedValue) => resolveAlias(v, x, mode.modeId, vars, collById);
-      setLeaf(sets[setName], figmaNameToPath(v.name), leafFor(v, value, vars, resolve));
+      const leaf = leafFor(v, value, vars, resolve);
+      insertLeaf(sets[setName], figmaNameToPath(v.name), { ...leaf, $extensions: { [META]: { source: 'variable', scopes: v.scopes } } }, v.name);
     }
   }
   return sets;
@@ -291,18 +298,39 @@ function typographySetName(figma: SerializedFigma): string | null {
 }
 
 export function transform(figma: SerializedFigma): TokensJson {
-  const sets = buildVariableSets(figma);
-
-  const typoSet = typographySetName(figma);
-  if (typoSet) {
-    for (const t of buildTypographyTokens(figma)) {
-      sets[typoSet] = sets[typoSet] ?? {};
-      setLeaf(sets[typoSet], t.path, t.leaf);
-    }
+  // 모드 두 벌 이상(다크 모드 등)은 아직 지원하지 않는다. buildVariableSets 자체는 모드별 세트를
+  // 만들 수 있게 두고(나중 확장 지점), 여기 입구에서 막는다.
+  for (const c of figma.collections) {
+    if (c.modes.length > 1)
+      throw new Error(
+        `'${c.name}' 컬렉션에 모드가 ${c.modes.length}개(${c.modes.map((m) => m.name).join(', ')}) 있어요. 아직 모드 하나만 지원해요.`,
+      );
   }
 
-  // Effect/Mode 1 은 'Effect' 변수 컬렉션에서 buildVariableSets 가 이미 만든다.
-  // (이펙트 '스타일'에서 파생하면 스타일 이름이 변수 이름과 달라 'Over contents'가 깨진다.)
+  const sets = buildVariableSets(figma);
 
-  return sets;
+  const typoSet = typographySetName(figma) ?? 'Styles/Default';
+  for (const t of buildTypographyTokens(figma)) {
+    sets[typoSet] = sets[typoSet] ?? {};
+    insertLeaf(sets[typoSet], t.path, t.leaf, t.path.join('/'));
+  }
+
+  // 그림자는 이펙트 스타일에서 온다. Effect 변수(v0.2)는 스타일이 참조하는 부품으로만 남는다.
+  for (const t of buildShadowTokens(figma)) {
+    sets['Styles/Default'] = sets['Styles/Default'] ?? {};
+    insertLeaf(sets['Styles/Default'], t.path, t.leaf, t.path.join('/'));
+  }
+
+  const counts: Record<string, number> = {};
+  const count = (node: TokenTree) => {
+    for (const val of Object.values(node)) {
+      if ('$value' in val) {
+        const type = (val as TokenLeaf).$type;
+        counts[type] = (counts[type] ?? 0) + 1;
+      } else count(val as TokenTree);
+    }
+  };
+  for (const tree of Object.values(sets)) count(tree);
+
+  return { $extensions: { [META]: { formatVersion: 2, counts, skipped: figma.skipped } }, ...sets };
 }
