@@ -16,7 +16,7 @@ const HISTORY_MAX = 5;
 // 필드별 최근 입력값(최신순·중복 제거·최대 5개). settings 안에 함께 저장된다.
 let history: Record<string, string[]> = { owner: [], repo: [], project: [] };
 // export 결과를 어디로 보낼지 — 다운로드(Export 버튼) vs 푸시(Push 버튼).
-let pendingIntent: 'download' | 'push' = 'download';
+let pendingIntent: 'download' | 'push' | 'raw' = 'download';
 
 // 현재 입력값을 해당 필드 히스토리 맨 앞에 넣는다(중복 제거·상한 적용).
 function pushHistory(id: string, value: string): void {
@@ -166,6 +166,20 @@ document.getElementById('export')?.addEventListener('click', () => {
   post('export');
 });
 
+// 원본(추출 직후 데이터) 내려받기 — 시험용 고정 파일을 피그마 MCP 없이 갱신하는 수단.
+document.getElementById('export-raw')?.addEventListener('click', () => {
+  pendingIntent = 'raw';
+  post('export');
+});
+
+// 숨긴 겹 알림 — 피그마에서 꺼 둔 효과·색·격자 겹은 토큰에 넣지 않으므로 개수를 보여 준다.
+function skippedNotice(tokens: unknown): string {
+  const meta = (tokens as { $extensions?: Record<string, { hiddenLayers?: number }> })?.$extensions?.[
+    'com.huray.token-export'
+  ];
+  return meta?.hiddenLayers ? ` · 숨긴 겹 ${meta.hiddenLayers}개 제외` : '';
+}
+
 // Push = 즉석에서 토큰 추출(다운로드 X) → 브랜치 생성 → PUT → PR.
 document.getElementById('push')?.addEventListener('click', () => {
   if (!$('project').value.trim()) return setStatus('프로젝트 이름을 입력하세요');
@@ -191,7 +205,7 @@ async function doPush(tokens: unknown): Promise<void> {
     },
     { fetch, onStatus: setStatus },
   );
-  setStatus(res.message);
+  setStatus(res.message + skippedNotice(tokens));
   if (res.prUrl) window.open(res.prUrl, '_blank');
 }
 
@@ -210,11 +224,14 @@ onmessage = (e: MessageEvent) => {
     refreshDerived();
   }
   if (msg?.type === 'result') {
-    if (pendingIntent === 'push') {
+    if (pendingIntent === 'raw') {
+      download('figma-raw.json', msg.raw);
+      setStatus('figma-raw.json 다운로드됨');
+    } else if (pendingIntent === 'push') {
       void doPush(msg.tokens);
     } else {
       download('tokens.json', msg.tokens);
-      setStatus('tokens.json 다운로드됨');
+      setStatus(`tokens.json 다운로드됨${skippedNotice(msg.tokens)}`);
     }
   }
   // 추출·변환 실패(code.ts에서 전달) — 이미 사람이 읽을 문구로 옴.

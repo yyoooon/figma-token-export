@@ -974,7 +974,7 @@
         },
         "Hover": {
           "$type": "color",
-          "$value": "{Color.Huray violet.100}"
+          "$value": "{Color.Huray violet.200}"
         },
         "Pressed": {
           "$type": "color",
@@ -1653,14 +1653,6 @@
           "$value": "{Color.Gray.200}"
         }
       },
-      "Transparent": {
-        "$type": "color",
-        "$value": "{Color.White Opacity.0}",
-        "Rest": {
-          "$type": "color",
-          "$value": "{Color.White Opacity.0}"
-        }
-      },
       "Huray Violet": {
         "Rest": {
           "$type": "color",
@@ -1695,6 +1687,12 @@
         "Rest": {
           "$type": "color",
           "$value": "{Color.Red.500}"
+        }
+      },
+      "Transparent": {
+        "Rest": {
+          "$type": "color",
+          "$value": "{Color.White Opacity.0}"
         }
       },
       "Correct": {
@@ -2406,7 +2404,7 @@
         },
         "Border-Selected": {
           "$type": "color",
-          "$value": "{Border.Transparent}"
+          "$value": "{Border.Transparent.Rest}"
         },
         "Border-Default-Rest": {
           "$type": "color",
@@ -2564,7 +2562,7 @@
         },
         "Border-Selected": {
           "$type": "color",
-          "$value": "{Border.Transparent}"
+          "$value": "{Border.Transparent.Rest}"
         },
         "Bg-Default-Disabled": {
           "$type": "color",

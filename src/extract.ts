@@ -1,5 +1,11 @@
 import type {
+  SerializedBlur,
+  SerializedEffectStyle,
   SerializedFigma,
+  SerializedGridStyle,
+  SerializedPaint,
+  SerializedPaintStyle,
+  SerializedShadowLayer,
   SerializedTextStyle,
   SerializedValue,
   SerializedVariable,
@@ -23,6 +29,7 @@ function toValue(raw: unknown): SerializedValue {
 }
 
 const TYPO_PROPS = ['fontFamily', 'fontWeight', 'fontSize', 'lineHeight', 'letterSpacing'] as const;
+const SHADOW_PROPS = ['color', 'offsetX', 'offsetY', 'radius', 'spread'] as const;
 
 export async function extractFigma(): Promise<SerializedFigma> {
   const colls = await figma.variables.getLocalVariableCollectionsAsync();
@@ -57,8 +64,91 @@ export async function extractFigma(): Promise<SerializedFigma> {
     for (const prop of TYPO_PROPS) {
       if (raw[prop]?.id) bound[prop] = raw[prop].id;
     }
-    return { name: s.name, boundVariables: bound };
+    const lh = s.lineHeight as { unit: 'PIXELS' | 'PERCENT' | 'AUTO'; value?: number };
+    const ls = s.letterSpacing as { unit: 'PIXELS' | 'PERCENT'; value: number };
+    return {
+      name: s.name,
+      boundVariables: bound,
+      values: {
+        fontFamily: s.fontName.family,
+        fontStyle: s.fontName.style,
+        fontSize: s.fontSize as number,
+        lineHeight: lh.unit === 'AUTO' ? { unit: 'AUTO' } : { unit: lh.unit, value: lh.value },
+        letterSpacing: { unit: ls.unit, value: ls.value },
+        textDecoration: s.textDecoration as SerializedTextStyle['values']['textDecoration'],
+      },
+    };
   });
 
-  return { collections, variables, textStyles };
+  const effectStylesRaw = await figma.getLocalEffectStylesAsync();
+  const paintStylesRaw = await figma.getLocalPaintStylesAsync();
+  const gridStylesRaw = await figma.getLocalGridStylesAsync();
+  const boundId = (raw: unknown, prop: string): string | undefined =>
+    ((raw as { boundVariables?: Record<string, { id?: string }> }).boundVariables ?? {})[prop]?.id;
+
+  const effectStyles: SerializedEffectStyle[] = effectStylesRaw.map((s) => {
+    const shadows: SerializedShadowLayer[] = [];
+    const blurs: SerializedBlur[] = [];
+    const others: string[] = [];
+    for (const e of s.effects) {
+      if (e.type === 'DROP_SHADOW' || e.type === 'INNER_SHADOW') {
+        const bound: SerializedShadowLayer['boundVariables'] = {};
+        for (const prop of SHADOW_PROPS) {
+          const id = boundId(e, prop);
+          if (id) bound[prop] = id;
+        }
+        shadows.push({
+          inset: e.type === 'INNER_SHADOW',
+          visible: e.visible,
+          color: { r: e.color.r, g: e.color.g, b: e.color.b, a: e.color.a },
+          offsetX: e.offset.x,
+          offsetY: e.offset.y,
+          blur: e.radius,
+          spread: e.spread ?? 0,
+          boundVariables: bound,
+        });
+      } else if (e.type === 'LAYER_BLUR' || e.type === 'BACKGROUND_BLUR') {
+        const id = boundId(e, 'radius');
+        blurs.push({ type: e.type, visible: e.visible, radius: e.radius, ...(id ? { boundRadius: id } : {}) });
+      } else {
+        others.push((e as { type: string }).type);
+      }
+    }
+    return { name: s.name, shadows, blurs, others };
+  });
+
+  const paintStyles: SerializedPaintStyle[] = paintStylesRaw.map((s) => ({
+    name: s.name,
+    paints: s.paints.map((p): SerializedPaint => {
+      const visible = p.visible ?? true;
+      if (p.type === 'SOLID') {
+        const id = boundId(p, 'color');
+        return { kind: 'SOLID', visible, color: { r: p.color.r, g: p.color.g, b: p.color.b }, opacity: p.opacity ?? 1, ...(id ? { boundColor: id } : {}) };
+      }
+      if (p.type.startsWith('GRADIENT_')) {
+        const g = p as GradientPaint;
+        return {
+          kind: 'GRADIENT',
+          gradientType: g.type.replace('GRADIENT_', '') as 'LINEAR' | 'RADIAL' | 'ANGULAR' | 'DIAMOND',
+          visible,
+          opacity: g.opacity ?? 1,
+          stops: g.gradientStops.map((st) => {
+            const id = boundId(st, 'color');
+            return { color: { r: st.color.r, g: st.color.g, b: st.color.b, a: st.color.a }, position: st.position, ...(id ? { boundColor: id } : {}) };
+          }),
+          transform: g.gradientTransform.map((row) => [...row]),
+        };
+      }
+      if (p.type === 'IMAGE') return { kind: 'IMAGE', visible, imageHash: p.imageHash, scaleMode: p.scaleMode };
+      return { kind: 'OTHER', visible, type: p.type };
+    }),
+  }));
+
+  // 격자는 피그마 값 그대로(프로젝트 변환기가 필요한 것만 쓴다).
+  const gridStyles: SerializedGridStyle[] = gridStylesRaw.map((s) => ({
+    name: s.name,
+    grids: s.layoutGrids.map((g) => ({ ...(g as unknown as Record<string, unknown>) })),
+  }));
+
+  return { collections, variables, textStyles, effectStyles, paintStyles, gridStyles };
 }

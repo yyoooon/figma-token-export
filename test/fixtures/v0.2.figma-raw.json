@@ -2659,7 +2659,7 @@
       "valuesByMode": {
         "8991:0": {
           "kind": "ALIAS",
-          "id": "VariableID:7059:10"
+          "id": "VariableID:7059:9"
         }
       },
       "scopes": [
@@ -5956,7 +5956,7 @@
       "valuesByMode": {
         "7053:2": {
           "kind": "ALIAS",
-          "id": "VariableID:9098:427"
+          "id": "VariableID:10128:6881"
         }
       },
       "scopes": [
@@ -6005,22 +6005,6 @@
         "7053:2": {
           "kind": "ALIAS",
           "id": "VariableID:8991:2891"
-        }
-      },
-      "scopes": [
-        "STROKE_COLOR"
-      ],
-      "hiddenFromPublishing": false
-    },
-    {
-      "id": "VariableID:9098:427",
-      "name": "Border/Transparent",
-      "collectionId": "VariableCollectionId:8991:7",
-      "resolvedType": "COLOR",
-      "valuesByMode": {
-        "8991:0": {
-          "kind": "ALIAS",
-          "id": "VariableID:8101:65"
         }
       },
       "scopes": [
@@ -6486,7 +6470,7 @@
       "valuesByMode": {
         "7053:2": {
           "kind": "ALIAS",
-          "id": "VariableID:9098:427"
+          "id": "VariableID:10128:6881"
         }
       },
       "scopes": [
@@ -12671,6 +12655,20 @@
         "fontSize": "VariableID:7053:2547",
         "lineHeight": "VariableID:7053:2583",
         "letterSpacing": "VariableID:7053:2584"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Bold",
+        "fontSize": 36,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 48
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": -0.20000000298023224
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12681,6 +12679,20 @@
         "fontSize": "VariableID:7053:2546",
         "lineHeight": "VariableID:7053:2581",
         "letterSpacing": "VariableID:7053:2584"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Bold",
+        "fontSize": 32,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 44
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": -0.20000000298023224
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12691,6 +12703,20 @@
         "fontSize": "VariableID:7053:2545",
         "lineHeight": "VariableID:7053:2579",
         "letterSpacing": "VariableID:7053:2584"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Bold",
+        "fontSize": 28,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 38
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": -0.20000000298023224
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12701,6 +12727,20 @@
         "fontSize": "VariableID:7053:2544",
         "lineHeight": "VariableID:7053:2576",
         "letterSpacing": "VariableID:7053:2584"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Bold",
+        "fontSize": 24,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 34
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": -0.20000000298023224
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12711,6 +12751,20 @@
         "fontSize": "VariableID:7053:2544",
         "lineHeight": "VariableID:7053:2576",
         "letterSpacing": "VariableID:7053:2584"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Bold",
+        "fontSize": 24,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 34
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": -0.20000000298023224
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12721,6 +12775,20 @@
         "fontSize": "VariableID:7053:2543",
         "lineHeight": "VariableID:7053:2574",
         "letterSpacing": "VariableID:7053:2584"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Bold",
+        "fontSize": 20,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 28
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": -0.20000000298023224
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12731,6 +12799,20 @@
         "fontSize": "VariableID:7053:2542",
         "lineHeight": "VariableID:7053:2572",
         "letterSpacing": "VariableID:7053:2584"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Bold",
+        "fontSize": 18,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 26
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": -0.20000000298023224
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12741,6 +12823,20 @@
         "fontSize": "VariableID:7053:2543",
         "lineHeight": "VariableID:7053:2574",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "SemiBold",
+        "fontSize": 20,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 28
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12751,6 +12847,20 @@
         "fontSize": "VariableID:7053:2542",
         "lineHeight": "VariableID:7053:2572",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "SemiBold",
+        "fontSize": 18,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 26
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12761,6 +12871,20 @@
         "fontSize": "VariableID:7053:2542",
         "lineHeight": "VariableID:7053:2572",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 18,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 26
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12771,6 +12895,20 @@
         "fontSize": "VariableID:7053:2548",
         "lineHeight": "VariableID:7053:2568",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "SemiBold",
+        "fontSize": 16,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 24
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12781,6 +12919,20 @@
         "fontSize": "VariableID:7053:2548",
         "lineHeight": "VariableID:7053:2568",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 16,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 24
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12791,6 +12943,20 @@
         "fontSize": "VariableID:7053:2549",
         "lineHeight": "VariableID:7053:2570",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "SemiBold",
+        "fontSize": 14,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 22
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12801,6 +12967,20 @@
         "fontSize": "VariableID:7053:2549",
         "lineHeight": "VariableID:7053:2570",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 14,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 22
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12811,6 +12991,20 @@
         "fontSize": "VariableID:7053:2549",
         "lineHeight": "VariableID:7053:2566",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "SemiBold",
+        "fontSize": 14,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 20
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12821,6 +13015,20 @@
         "fontSize": "VariableID:7053:2549",
         "lineHeight": "VariableID:7053:2566",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 14,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 20
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12831,6 +13039,20 @@
         "fontSize": "VariableID:7053:2549",
         "lineHeight": "VariableID:7053:2566",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 14,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 20
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "UNDERLINE"
       }
     },
     {
@@ -12841,6 +13063,20 @@
         "fontSize": "VariableID:7053:2561",
         "lineHeight": "VariableID:7053:2564",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "SemiBold",
+        "fontSize": 12,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 18
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12851,6 +13087,20 @@
         "fontSize": "VariableID:7053:2561",
         "lineHeight": "VariableID:7053:2564",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 12,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 18
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "UNDERLINE"
       }
     },
     {
@@ -12861,6 +13111,20 @@
         "fontSize": "VariableID:7053:2561",
         "lineHeight": "VariableID:7053:2564",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 12,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 18
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12871,6 +13135,20 @@
         "fontSize": "VariableID:7053:2525",
         "lineHeight": "VariableID:7053:2524",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "SemiBold",
+        "fontSize": 10,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 14
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     },
     {
@@ -12881,61 +13159,149 @@
         "fontSize": "VariableID:7053:2525",
         "lineHeight": "VariableID:7053:2524",
         "letterSpacing": "VariableID:7053:2526"
+      },
+      "values": {
+        "fontFamily": "Pretendard",
+        "fontStyle": "Medium",
+        "fontSize": 10,
+        "lineHeight": {
+          "unit": "PIXELS",
+          "value": 14
+        },
+        "letterSpacing": {
+          "unit": "PIXELS",
+          "value": 0
+        },
+        "textDecoration": "NONE"
       }
     }
   ],
   "effectStyles": [
     {
       "name": "Button hover",
-      "effects": [
+      "shadows": [
         {
-          "kind": "DROP_SHADOW",
+          "inset": false,
+          "visible": true,
           "color": {
-            "kind": "ALIAS",
-            "id": "VariableID:7064:2533"
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.10000000149011612
           },
-          "offset": {
-            "x": 0,
-            "y": 0
-          },
-          "radius": 0,
-          "spread": 4
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": 4,
+          "boundVariables": {
+            "color": "VariableID:7064:2533",
+            "spread": "VariableID:8169:2736"
+          }
         }
-      ]
+      ],
+      "blurs": [],
+      "others": []
     },
     {
       "name": "Inner Shadow",
-      "effects": [
+      "shadows": [
         {
-          "kind": "INNER_SHADOW",
+          "inset": true,
+          "visible": true,
           "color": {
-            "kind": "ALIAS",
-            "id": "VariableID:7053:3163"
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
           },
-          "offset": {
-            "x": -8,
-            "y": 0
+          "offsetX": -8,
+          "offsetY": 0,
+          "blur": 8,
+          "spread": 0,
+          "boundVariables": {
+            "color": "VariableID:7053:3163",
+            "offsetX": "VariableID:10179:2735",
+            "radius": "VariableID:10179:2736"
+          }
+        }
+      ],
+      "blurs": [],
+      "others": []
+    },
+    {
+      "name": "Elevate",
+      "shadows": [
+        {
+          "inset": false,
+          "visible": true,
+          "color": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.10000000149011612
           },
-          "radius": 8,
-          "spread": 0
+          "offsetX": 0,
+          "offsetY": 4,
+          "blur": 16,
+          "spread": 0,
+          "boundVariables": {
+            "color": "VariableID:7064:2533",
+            "offsetY": "VariableID:10179:2733",
+            "radius": "VariableID:10179:2732"
+          }
+        }
+      ],
+      "blurs": [],
+      "others": []
+    }
+  ],
+  "paintStyles": [
+    {
+      "name": "Guide/Value",
+      "paints": [
+        {
+          "kind": "SOLID",
+          "visible": true,
+          "color": {
+            "r": 1,
+            "g": 0,
+            "b": 1
+          },
+          "opacity": 1
         }
       ]
     },
     {
-      "name": "Elevate",
-      "effects": [
+      "name": "Guide/Size",
+      "paints": [
         {
-          "kind": "DROP_SHADOW",
+          "kind": "SOLID",
+          "visible": true,
           "color": {
-            "kind": "ALIAS",
-            "id": "VariableID:7064:2533"
+            "r": 0.3122312128543854,
+            "g": 0.5988015532493591,
+            "b": 1
           },
-          "offset": {
-            "x": 0,
-            "y": 4
+          "opacity": 1
+        }
+      ]
+    }
+  ],
+  "gridStyles": [
+    {
+      "name": "Icon drawing guide",
+      "grids": [
+        {
+          "pattern": "GRID",
+          "visible": true,
+          "color": {
+            "r": 1,
+            "g": 0,
+            "b": 0,
+            "a": 0.20000000298023224
           },
-          "radius": 16,
-          "spread": 0
+          "sectionSize": 2,
+          "boundVariables": {}
         }
       ]
     }

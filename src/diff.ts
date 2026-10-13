@@ -23,6 +23,27 @@ export interface TokenDiff {
   added: { path: string; value: unknown }[];
   removed: { path: string; value: unknown }[];
   changed: { path: string; from: unknown; to: unknown }[];
+  // 값은 그대로인데 $type·$extensions(용도·출처·개수표)가 바뀜 — 변환기가 이 메타로 판단하므로 푸시해야 한다.
+  metaChanged: boolean;
+}
+
+// { "Set/Path": { $type, $extensions } } — 값 외 정보만 모은다(+ 루트 메타).
+function flattenMeta(json: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = { $root: (json as { $extensions?: unknown }).$extensions ?? null };
+  const walk = (node: Record<string, unknown>, prefix: string) => {
+    for (const [k, v] of Object.entries(node)) {
+      if (k.startsWith('$') || v == null || typeof v !== 'object') continue;
+      const path = `${prefix}/${k}`;
+      const leaf = v as { $value?: unknown; $type?: unknown; $extensions?: unknown };
+      if ('$value' in leaf) out[path] = { $type: leaf.$type, $extensions: leaf.$extensions ?? null };
+      else walk(v as Record<string, unknown>, path);
+    }
+  };
+  for (const [setName, tree] of Object.entries(json)) {
+    if (setName.startsWith('$') || !tree || typeof tree !== 'object') continue;
+    walk(tree as Record<string, unknown>, setName);
+  }
+  return out;
 }
 
 export function diffTokens(
@@ -32,7 +53,12 @@ export function diffTokens(
   const a = flattenTokens(oldJson);
   const b = flattenTokens(newJson);
   const eq = (x: unknown, y: unknown) => JSON.stringify(x) === JSON.stringify(y);
-  const diff: TokenDiff = { added: [], removed: [], changed: [] };
+  const diff: TokenDiff = {
+    added: [],
+    removed: [],
+    changed: [],
+    metaChanged: !eq(flattenMeta(oldJson), flattenMeta(newJson)),
+  };
   for (const k of Object.keys(b)) {
     if (!(k in a)) diff.added.push({ path: k, value: b[k] });
     else if (!eq(a[k], b[k])) diff.changed.push({ path: k, from: a[k], to: b[k] });
@@ -93,7 +119,9 @@ function section(title: string, lines: string[]): string {
 export function formatPrBody(diff: TokenDiff, project: string): string {
   const { added, removed, changed } = diff;
   if (!added.length && !removed.length && !changed.length) {
-    return `\`${project}\` 토큰 변경 없음 (이전과 동일).`;
+    return diff.metaChanged
+      ? `\`${project}\` 토큰 값은 그대로, 형식·용도 정보(\$type·\$extensions)만 바뀜.`
+      : `\`${project}\` 토큰 변경 없음 (이전과 동일).`;
   }
   const head = `## 토큰 변경 요약 — \`${project}\`\n\n변경 ${changed.length} · 추가 ${added.length} · 삭제 ${removed.length}\n`;
   return [

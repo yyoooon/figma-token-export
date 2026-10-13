@@ -29,23 +29,89 @@ export interface SerializedCollection {
   modes: SerializedMode[];
 }
 
-// 타이포 텍스트 스타일. 각 속성은 바인딩된 변수 id(있으면) — transform이 ref로 복원.
+export interface SerializedTextStyleValues {
+  fontFamily: string;
+  fontStyle: string; // 'Bold', 'SemiBold' — 굵기 미연결 시 숫자로 바꿀 근거
+  fontSize: number;
+  lineHeight: { unit: 'PIXELS' | 'PERCENT' | 'AUTO'; value?: number };
+  letterSpacing: { unit: 'PIXELS' | 'PERCENT'; value: number };
+  textDecoration: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
+}
+
+// 타이포 텍스트 스타일. 연결된 속성은 변수 id, 모든 속성의 실제 값은 values 에.
+// (자간 % 처럼 피그마 변수로 못 만드는 값은 스타일에만 있다 — values 가 그 출처)
 export interface SerializedTextStyle {
-  name: string; // 'Display/lg-bold'
+  name: string; // 'Body/M/Bold'
   boundVariables: Partial<
     Record<
       'fontFamily' | 'fontWeight' | 'fontSize' | 'lineHeight' | 'letterSpacing',
       string // 변수 id
     >
   >;
+  values: SerializedTextStyleValues;
 }
 
-// 그림자(이펙트)는 'Effect' 변수 컬렉션의 변수로 들어오므로 별도 타입이 필요 없다.
+export interface SerializedShadowLayer {
+  inset: boolean;
+  visible: boolean;
+  color: { r: number; g: number; b: number; a: number };
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  spread: number;
+  boundVariables: Partial<Record<'color' | 'offsetX' | 'offsetY' | 'radius' | 'spread', string>>;
+}
+
+export interface SerializedBlur {
+  type: 'LAYER_BLUR' | 'BACKGROUND_BLUR';
+  visible: boolean;
+  radius: number;
+  boundRadius?: string; // 변수 id
+}
+
+// 이펙트 스타일 — 그림자·흐림을 나눠 담고, 처음 보는 효과는 종류 이름만 남긴다(전부 내보낸다).
+export interface SerializedEffectStyle {
+  name: string; // 'Elevation/Xsmall'
+  shadows: SerializedShadowLayer[];
+  blurs: SerializedBlur[];
+  others: string[]; // ['NOISE']
+}
+
+type RGB = { r: number; g: number; b: number };
+type RGBA = RGB & { a: number };
+
+export type SerializedPaint =
+  | { kind: 'SOLID'; visible: boolean; color: RGB; opacity: number; boundColor?: string }
+  | {
+      kind: 'GRADIENT';
+      gradientType: 'LINEAR' | 'RADIAL' | 'ANGULAR' | 'DIAMOND';
+      visible: boolean;
+      opacity: number;
+      stops: { color: RGBA; position: number; boundColor?: string }[];
+      transform: number[][];
+    }
+  | { kind: 'IMAGE'; visible: boolean; imageHash: string | null; scaleMode: string }
+  | { kind: 'OTHER'; visible: boolean; type: string };
+
+// 색(페인트) 스타일 — 단색·그라디언트·이미지 모두.
+export interface SerializedPaintStyle {
+  name: string;
+  paints: SerializedPaint[];
+}
+
+// 레이아웃 가이드(격자) 스타일 — 피그마 값 그대로.
+export interface SerializedGridStyle {
+  name: string;
+  grids: Record<string, unknown>[];
+}
 
 export interface SerializedFigma {
   collections: SerializedCollection[];
   variables: SerializedVariable[];
   textStyles: SerializedTextStyle[];
+  effectStyles: SerializedEffectStyle[];
+  paintStyles: SerializedPaintStyle[];
+  gridStyles: SerializedGridStyle[];
 }
 
 // ── 출력(tokens.json) 쪽 ──
@@ -53,10 +119,12 @@ export interface SerializedFigma {
 export type TokenLeaf = {
   $type: string;
   $value: unknown;
+  $extensions?: Record<string, unknown>;
 };
 export interface TokenTree {
   [key: string]: TokenTree | TokenLeaf;
 }
 export interface TokensJson {
-  [setName: string]: TokenTree;
+  $extensions?: Record<string, unknown>;
+  [setName: string]: TokenTree | Record<string, unknown> | undefined;
 }

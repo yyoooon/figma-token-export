@@ -87,7 +87,7 @@ export async function pushTokens(cfg: PushConfig, deps: PushDeps): Promise<PushR
 
     // 변경이 없으면 브랜치·PR 만들지 않고 일찍 종료 (빈 브랜치/빈 PR 방지)
     const diff = diffTokens(oldJson, tokens as Record<string, unknown>);
-    if (!diff.added.length && !diff.changed.length && !diff.removed.length) {
+    if (!diff.added.length && !diff.changed.length && !diff.removed.length && !diff.metaChanged) {
       return { ok: true, message: '변경 없음 — 푸시하지 않음 (허브와 동일)' };
     }
     const message = commitTitle(project, diff); // 커밋·PR 제목 (추가/갱신 구분)
