@@ -12,6 +12,8 @@ export interface PushConfig {
   path: string;
   pat: string;
   tokens: unknown;
+  // 실제 작업자 이름(선택) — PAT 를 빌려 쓰는 비개발자도 누가 올렸는지 남긴다.
+  author?: string;
 }
 
 export interface PushResult {
@@ -50,6 +52,7 @@ function decodeB64(b64: string): string {
 export async function pushTokens(cfg: PushConfig, deps: PushDeps): Promise<PushResult> {
   const { fetch, onStatus = () => {} } = deps;
   const { owner, repo, project, branch, path, pat, tokens } = cfg;
+  const author = cfg.author?.trim() || undefined;
 
   // 추출 결과가 비면(로컬 변수·스타일 없음) 중단 — 안 막으면 허브 토큰을 지우는 PR이 생긴다.
   if (!tokens || typeof tokens !== 'object' || Object.keys(tokens).length === 0) {
@@ -91,7 +94,7 @@ export async function pushTokens(cfg: PushConfig, deps: PushDeps): Promise<PushR
       return { ok: true, message: '변경 없음 — 푸시하지 않음 (허브와 동일)' };
     }
     const message = commitTitle(project, diff); // 커밋·PR 제목 (추가/갱신 구분)
-    const prBody = formatPrBody(diff, project);
+    const prBody = (author ? `### 👤 작성자: ${author}\n\n` : '') + formatPrBody(diff, project);
 
     // 브랜치를 base 최신 커밋에 맞춘다.
     // - 없으면 생성, 있으면 force-reset(머지/방치된 옛 브랜치도 깨끗하게 다시 시작).
@@ -117,7 +120,7 @@ export async function pushTokens(cfg: PushConfig, deps: PushDeps): Promise<PushR
     const put = await fetch(url, {
       method: 'PUT',
       headers,
-      body: JSON.stringify(buildPutBody({ json: tokens, message, branch, sha })),
+      body: JSON.stringify(buildPutBody({ json: tokens, message, branch, sha, author })),
     });
     if (!put.ok) return { ok: false, message: githubError(put.status) };
 

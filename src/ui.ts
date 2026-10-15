@@ -9,12 +9,12 @@ const post = (type: string, extra: Record<string, unknown> = {}) =>
 
 // branch/path 는 project 에서 파생하므로 저장 대상이 아니다.
 // pat 은 편의상 저장하지만 clientStorage 평문 — 공유 PC 주의.
-const SETTING_IDS = ['owner', 'repo', 'project', 'pat'] as const;
+const SETTING_IDS = ['owner', 'repo', 'project', 'author', 'pat'] as const;
 // 최근 입력값을 자동완성으로 보여줄 필드 — PAT는 비밀번호라 제외.
-const HISTORY_IDS = ['owner', 'repo', 'project'] as const;
+const HISTORY_IDS = ['owner', 'repo', 'project', 'author'] as const;
 const HISTORY_MAX = 5;
 // 필드별 최근 입력값(최신순·중복 제거·최대 5개). settings 안에 함께 저장된다.
-let history: Record<string, string[]> = { owner: [], repo: [], project: [] };
+let history: Record<string, string[]> = { owner: [], repo: [], project: [], author: [] };
 // export 결과를 어디로 보낼지 — 다운로드(Export 버튼) vs 푸시(Push 버튼).
 let pendingIntent: 'download' | 'push' | 'raw' = 'download';
 
@@ -147,6 +147,7 @@ post('load-settings');
 attachAutocomplete('owner');
 attachAutocomplete('repo');
 attachAutocomplete('project', refreshDerived);
+attachAutocomplete('author');
 
 // 프로젝트 이름 입력 시 branch/path 자동 채움
 $('project').addEventListener('input', refreshDerived);
@@ -202,6 +203,7 @@ async function doPush(tokens: unknown): Promise<void> {
       path: $('path').value,
       pat: $('pat').value,
       tokens,
+      author: $('author').value,
     },
     { fetch, onStatus: setStatus },
   );
@@ -213,7 +215,7 @@ onmessage = (e: MessageEvent) => {
   const msg = e.data.pluginMessage;
   if (msg?.type === 'settings') {
     for (const k of SETTING_IDS) if (msg.settings[k]) $(k).value = msg.settings[k];
-    if (msg.settings.history) history = { owner: [], repo: [], project: [], ...msg.settings.history };
+    if (msg.settings.history) history = { owner: [], repo: [], project: [], author: [], ...msg.settings.history };
     // 프로젝트 이름은 열려있는 파일 이름으로 항상 덮어씀.
     if (msg.fileName) $('project').value = slugifyProject(msg.fileName);
     refreshDerived();

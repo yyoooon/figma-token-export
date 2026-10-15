@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildPutBody, contentsUrl } from '../src/github';
+import { AUTHOR_EMAIL, buildPutBody, contentsUrl } from '../src/github';
 
 describe('contentsUrl', () => {
   it('builds the Contents API url', () => {
@@ -21,5 +21,10 @@ describe('buildPutBody', () => {
   it('omits sha when creating new file', () => {
     const body = buildPutBody({ json: {}, message: 'm', branch: 'b' });
     expect('sha' in body).toBe(false);
+  });
+  it('adds author (name + fixed email) only when a name is given', () => {
+    const body = buildPutBody({ json: {}, message: 'm', branch: 'b', author: '홍길동' });
+    expect(body.author).toEqual({ name: '홍길동', email: AUTHOR_EMAIL });
+    expect('author' in buildPutBody({ json: {}, message: 'm', branch: 'b' })).toBe(false);
   });
 });

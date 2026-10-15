@@ -11,18 +11,33 @@ function toBase64(str: string): string {
   );
 }
 
+// 커밋 작성자로 쓸 고정 주소. 비개발자는 GitHub 계정이 없어 이름만 받는다.
+// GitHub 계정의 이메일과 겹치면 그 사람으로 연결되므로 아무 계정과도 안 묶일 회사 noreply 주소를 쓴다.
+export const AUTHOR_EMAIL = 'design-token-export@noreply.huray.net';
+
+type PutBody = {
+  message: string;
+  content: string;
+  branch: string;
+  sha?: string;
+  author?: { name: string; email: string };
+};
+
+// author: 실제 작업자 이름(선택). 주면 커밋 작성자가 그 이름, 올린 사람(committer)은 PAT 주인 그대로.
 export function buildPutBody(opts: {
   json: unknown;
   message: string;
   branch: string;
   sha?: string;
-}): { message: string; content: string; branch: string; sha?: string } {
+  author?: string;
+}): PutBody {
   const content = toBase64(JSON.stringify(opts.json, null, 2));
-  const body: { message: string; content: string; branch: string; sha?: string } = {
+  const body: PutBody = {
     message: opts.message,
     content,
     branch: opts.branch,
   };
   if (opts.sha) body.sha = opts.sha;
+  if (opts.author) body.author = { name: opts.author, email: AUTHOR_EMAIL };
   return body;
 }

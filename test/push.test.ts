@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { pushTokens } from '../src/push';
+import { AUTHOR_EMAIL } from '../src/github';
 
 // ── 가짜 GitHub API (mock fetch) ──
 // 실제 서버 대신, "이 엔드포인트엔 이 응답" 을 미리 짜두고 주입한다.
@@ -45,16 +46,18 @@ function happy(): Record<string, Response> {
 // 응답 맵(또는 throw)으로 가짜 fetch 생성. calls 로 호출 이력 확인.
 function makeFetch(routes: Record<string, Response> | 'throw') {
   const calls: string[] = [];
+  const bodies: Record<string, any> = {}; // 엔드포인트별 마지막 요청 본문(JSON)
   const fn = (async (url: unknown, init: RequestInit = {}) => {
     const method = init.method ?? 'GET';
     calls.push(classify(String(url), method));
+    if (init.body) bodies[classify(String(url), method)] = JSON.parse(String(init.body));
     if (routes === 'throw') throw new Error('network down');
     const key = classify(String(url), method);
     const r = routes[key];
     if (!r) throw new Error(`no mock for ${method} ${url} (=${key})`);
     return r;
   }) as unknown as typeof fetch;
-  return Object.assign(fn, { calls });
+  return Object.assign(fn, { calls, bodies });
 }
 
 const cfg = {
@@ -139,5 +142,29 @@ describe('pushTokens — 케이스별 사람이 읽는 결과', () => {
     const res = await pushTokens(cfg, { fetch });
     expect(res.ok).toBe(false);
     expect(res.message).toContain('인터넷 연결');
+  });
+});
+
+describe('pushTokens — 작성자 이름(선택)', () => {
+  it('이름을 넣으면 커밋 작성자와 PR 본문 맨 위에 남는다', async () => {
+    const fetch = makeFetch(happy());
+    await pushTokens({ ...cfg, author: '홍길동' }, { fetch });
+    expect(fetch.bodies.putFile.author).toEqual({ name: '홍길동', email: AUTHOR_EMAIL });
+    expect(fetch.bodies.createPr.body.startsWith('### 👤 작성자: 홍길동\n\n')).toBe(true);
+  });
+
+  it('앞뒤 공백은 지운다', async () => {
+    const fetch = makeFetch(happy());
+    await pushTokens({ ...cfg, author: '  홍길동 ' }, { fetch });
+    expect(fetch.bodies.putFile.author.name).toBe('홍길동');
+  });
+
+  it('비워 두면 지금처럼 PAT 주인만 남는다(작성자 줄 없음)', async () => {
+    for (const author of [undefined, '', '   ']) {
+      const fetch = makeFetch(happy());
+      await pushTokens({ ...cfg, author }, { fetch });
+      expect('author' in fetch.bodies.putFile).toBe(false);
+      expect(fetch.bodies.createPr.body).not.toContain('작성자');
+    }
   });
 });
