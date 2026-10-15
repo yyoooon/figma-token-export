@@ -66,11 +66,11 @@ npm test
 
 `test/acceptance.test.ts` = 실제 피그마 파일 두 개(Huray DS v0.2·v0.3)로 만든 합격 시험.
 
-- `test/fixtures/v0.x.figma-raw.json` — 플러그인의 **"원본 내려받기 (시험용)"** 버튼으로 받은 추출 원본
+- `test/fixtures/v0.x.figma-raw.json` — 추출 원본(`extractFigma()` 결과). 받던 버튼은 v0.2·v0.3 저장 후 뺐다
 - `test/fixtures/v0.x.tokens.json` — 그 원본의 출력 고정본
 - `test/fixtures/hub-v0.2.tokens.json` — 허브의 v0.2 (형식 1) — 변수·타이포가 같은지 대조
 
-피그마가 바뀌면 원본을 다시 받아 고정본을 갱신한다.
+피그마가 바뀌어 원본을 다시 받아야 하면, 뺀 버튼을 git 기록에서 잠시 되살려 받고 고정본을 갱신한다.
 
 ## 범위 밖 (YAGNI)
 

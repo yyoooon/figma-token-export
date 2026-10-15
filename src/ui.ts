@@ -16,7 +16,7 @@ const HISTORY_MAX = 5;
 // 필드별 최근 입력값(최신순·중복 제거·최대 5개). settings 안에 함께 저장된다.
 let history: Record<string, string[]> = { owner: [], repo: [], project: [], author: [] };
 // export 결과를 어디로 보낼지 — 다운로드(Export 버튼) vs 푸시(Push 버튼).
-let pendingIntent: 'download' | 'push' | 'raw' = 'download';
+let pendingIntent: 'download' | 'push' = 'download';
 
 // 현재 입력값을 해당 필드 히스토리 맨 앞에 넣는다(중복 제거·상한 적용).
 function pushHistory(id: string, value: string): void {
@@ -167,12 +167,6 @@ document.getElementById('export')?.addEventListener('click', () => {
   post('export');
 });
 
-// 원본(추출 직후 데이터) 내려받기 — 시험용 고정 파일을 피그마 MCP 없이 갱신하는 수단.
-document.getElementById('export-raw')?.addEventListener('click', () => {
-  pendingIntent = 'raw';
-  post('export');
-});
-
 // 숨긴 겹 알림 — 피그마에서 꺼 둔 효과·색·격자 겹은 토큰에 넣지 않으므로 개수를 보여 준다.
 function skippedNotice(tokens: unknown): string {
   const meta = (tokens as { $extensions?: Record<string, { hiddenLayers?: number }> })?.$extensions?.[
@@ -226,10 +220,7 @@ onmessage = (e: MessageEvent) => {
     refreshDerived();
   }
   if (msg?.type === 'result') {
-    if (pendingIntent === 'raw') {
-      download('figma-raw.json', msg.raw);
-      setStatus('figma-raw.json 다운로드됨');
-    } else if (pendingIntent === 'push') {
+    if (pendingIntent === 'push') {
       void doPush(msg.tokens);
     } else {
       download('tokens.json', msg.tokens);
